@@ -166,10 +166,9 @@ if s:has_plugin('lightline.vim') "{{{2
                 \ 'mode_map': {'c': 'NORMAL'},
                 \ 'active': {
                 \   'left': [ [ 'mode', 'paste' ],
-                \             [ 'readonly', 'filename', 'modified' ] ],
-                \   'right' : [ [ 'date' ],
-                \               [ 'filetype', 'fileencoding', 'fileformat', 'lineinfo', 'percent' ],
-                \               [ 'filepath' ] ]
+                \             [ 'readonly', 'filepath', 'filename', 'modified' ] ],
+                \   'right' : [ [ 'lineinfo', 'percent' ],
+                \               [ 'filetype', 'fileencoding', 'fileformat' ] ]
                 \ },
                 \ 'component_function': {
                 \   'modified': 'MyModified',

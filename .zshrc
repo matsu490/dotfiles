@@ -1,6 +1,7 @@
 export PATH="/usr/local/bin:$PATH"
 export PATH="/usr/local/Cellar:$PATH"
 export PYTHONPATH="/usr/local/lib/wxPython/lib/python2.7/site-packages/wx-3.0-osx_cocoa:/usr/local/lib/wxPython/lib/python2.7/site-packages:$PYTHONPATH"
+export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.7.0"
 #export PATH="/Users/matsu/.vim/bundle/powerline/scripts:$PATH"
 #source /Users/matsu/.vim/bundle/powerline/powerline/bindings/zsh/powerline.zsh
 #export TERM='xterm-256color'
