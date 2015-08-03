@@ -1,0 +1,108 @@
+%	synapse matrix & incoming & outgoing & mean & distrimution
+
+clear all
+close all
+fclose('all');
+
+tglSave = 0;
+if tglSave tglVisible='off';else tglVisible='on';end
+
+strEnv  =  {'stim100' 'addstdp' 'mltstdp' 'stim050' 'stim060' 'stim070' 'stim080' 'stim090'};
+strData =  {'50[Hz]' '100[Hz]' '200[Hz]' '0.3[-]' '0.5[-]' '0.7[-]'};
+strTest =  {'1,000[msec](same)' '2,000[msec](same)' '4,000[msec](same)'...
+			'1,000[msec](diff)' '2,000[msec](diff)' '4,000[msec](diff)'...
+			'wo learning' 'wo input mod' ' wo learning & input mod'};
+strCmp  =  {'02' '04' '06' '08' '10' '12' '14' '16' '18' '20'};
+strTrl  =  {'01' '02' '03' '04' '05' '06' '07' '08' '09' '10'};
+strClr  =  {'r' 'g' 'b' 'r' 'g' 'b'};
+
+pltEnv  = 1:1;	%Simulation environment
+pltData = 1:1;	%Data number
+pltTest = [7:9];  %Data-test number
+pltCmp  = 5:5;  %Sequence compression ratio
+pltTrl  = 1:10; %After learning trial number
+
+nSeqMean = ones(length(pltEnv),length(pltData),length(pltTest));
+nSeqStd = ones(length(pltEnv),length(pltData),length(pltTest));
+
+dirSave = '../SavedFigures/plotter004';
+dirPrnt = sprintf('../DataBase');
+dirPrntSeq = sprintf('..');
+
+for i = pltEnv
+	dirEnv = sprintf('%s/%s',dirPrnt,strEnv{i});
+	dirEnvSeq = sprintf('%s/mod-code-longstim02-%s',dirPrntSeq,strEnv{i});
+
+	for j = pltData
+		dirData = sprintf('%s/data%d',dirEnv,j);
+		dirDataSeq = sprintf('%s/data%d',dirEnvSeq,j);
+
+		for k = pltTest
+			dirTest = sprintf('%s/test0%d',dirData,k);
+			dirTestSeq = sprintf('%s/data-test0%d',dirDataSeq,k);
+			load_path = sprintf('%s/synapse.mat',dirTest);
+			load(load_path)
+
+			figure('visible',tglVisible)
+			subplot(2,3,1)
+			imagesc(syna_mat)
+			title(sprintf('%s %s %s',strEnv{i},strData{j},strTest{k}))
+			xlabel('Pre neuron No.')
+			ylabel('Post neuron No.')
+			axis('square')	
+			subplot(2,3,2)
+			plot(syna_in,400:-1:1)
+			xlabel('Mean weight (incoming) [mS]')
+			subplot(2,3,3)
+			semilogx(syna_dist_chunked{1,1}(2,:),syna_dist_chunked{1,1}(1,:),'k');hold on
+			semilogx(syna_dist_chunked{1,2}(2,:),syna_dist_chunked{1,2}(1,:),'r');hold on
+			semilogx(syna_dist_chunked{1,3}(2,:),syna_dist_chunked{1,3}(1,:),'b');hold on
+			semilogx(syna_dist_chunked{1,4}(2,:),syna_dist_chunked{1,4}(1,:),'k');hold on
+			legend('stim->stim','stim->other','other->stim','other->other')
+			xlabel('Synaptic weight [mS]')
+			ylabel('Count')
+			title('Distribution of chunked matrix')
+			subplot(2,3,4)
+			plot(1:400,-syna_out)
+			ylabel('Mean weight (outgoing) [mS]')
+			subplot(2,3,5)
+			bar3(syna_mean)
+			title('Mean weight of chunked matrix')
+			set(gca,'xTickLabel',{'preGstim' 'preGother'},'yTickLabel',{'postGstim' 'postGother'})
+			zlabel('Mean weight [mS]')
+			subplot(2,3,6)
+			semilogx(syna_dist(2,:),syna_dist(1,:))
+			xlabel('Synaptic weight [mS]')
+			ylabel('Count')
+
+			set(gcf,'PaperPositionMode','auto')
+			set(gcf,'Position',[.25 .25 1500 900])
+			if tglSave
+				filename = sprintf('%s_%s_%s',strEnv{i},strrep(strData{j},'.',','),strTest{k});
+				filepath = [dirSave '/' filename];
+				saveas(gcf,filepath,'fig')
+				saveas(gcf,filepath,'png')
+			end
+
+%			figure(100)
+%			if k<=3 pltTmp=k;else pltTmp=k-3;end
+%			subplot(2,3,pltTmp)
+%			semilogx(syna_dist(2,:),syna_dist(1,:),strClr{j}); hold on
+%			plot([syna_dist(2,find(syna_dist(1,:)==max(syna_dist(1,:)))) syna_dist(2,find(syna_dist(1,:)==max(syna_dist(1,:))))],[0 max(syna_dist(1,:))],['--' strClr{j}])
+%			plot([0.01 100],[max(syna_dist(1,:)) max(syna_dist(1,:))],['--' strClr{j}])
+%			ylim([0 3000])
+%			title(strTest{k})
+%			
+%			figure(200)
+%			semilogx(syna_dist(2,:),syna_dist(1,:)); hold on
+%			ylim([0 3000])
+%			title('Comparison between data-test')
+
+			fprintf('For loop have finished until test0%d\n',k);
+		end %for k : data-test
+
+		fprintf('For loop have finished until data%d\n',j);
+	end %for j : data
+
+	fprintf('For loop have finished until simu env%d\n',i);
+end	%for i : simulation environment

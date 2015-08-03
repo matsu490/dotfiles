@@ -1,0 +1,71 @@
+%	Sequence number analyser
+
+clear all
+close all
+fclose('all');
+
+strEnv = {'stim100' 'addstdp' 'mltstdp' 'stim050' 'stim060' 'stim070' 'stim080' 'stim090'};
+strCmp = {'02' '04' '06' '08' '10' '12' '14' '16' '18' '20'};
+strTrl = {'01' '02' '03' '04' '05' '06' '07' '08' '09' '10'};
+
+dirPrnt = sprintf('./SequenceData');
+dirPrntSeq = sprintf('.');
+for i = 1:8
+	dirEnv = sprintf('%s/%s',dirPrnt,strEnv{i});
+	dirEnvSeq = sprintf('%s/mod-code-longstim02-%s',dirPrntSeq,strEnv{i});
+	for j = 1:6
+		dirData = sprintf('%s/data%d',dirEnv,j);
+		dirDataSeq = sprintf('%s/data%d',dirEnvSeq,j);
+		for k = 1:9
+			dirTest = sprintf('%s/test0%d',dirData,k);
+			dirTestSeq = sprintf('%s/data-test0%d',dirDataSeq,k);
+			for l = 5:5
+				dirCmp = sprintf('%s/cmpr%s',dirTest,strCmp{l});
+				for m = 1:10
+					dirTrl = sprintf('%s/trial%s',dirCmp,strTrl{m});
+					dirTrlSeq = sprintf('%s/sequences%s-c%s',dirTestSeq,strTrl{m},strCmp{l});
+
+	                clear load_fname
+	                if m>=10
+	                    load_fname = sprintf('sequences%d-c%s',m,strCmp{l});
+	                else
+	                    load_fname = sprintf('sequences0%d-c%s',m,strCmp{l});
+	                end
+	                
+	                
+	                analysis_filenum = 1;
+	                switch analysis_filenum
+	                    case 1;
+	                    case 2; load_fname = sprintf('%s.length');
+	                    case 3; load_fname = sprintf('%s.appear.cell');
+	                    case 4; load_fname = sprintf('%s.appear.syna');
+	                end
+
+
+	                load_str = sprintf('%s/%s',dirTestSeq,load_fname);
+	                load(load_str)
+	
+	                tmpi = findstr(load_fname,'-');
+	                load_fname(tmpi) = '_';
+	
+	                eval_str = sprintf('sequences = %s; clear %s', load_fname, load_fname);
+	                eval(eval_str)
+	
+	                if isempty(sequences)
+	                    seqstat = 0;
+	                else
+	                    seqstat = length(find(sequences(:,3)==1));
+	                end
+
+					save_str = sprintf('%s/nSeq.mat',dirTrl);
+					save(save_str,'seqstat');
+					clear seqstat
+				end % for m : after learning trial
+			end %for l : compression ratio
+			fprintf('For loop have finished until test0%d\n',k);
+		end %for k : data-test
+		fprintf('For loop have finished until data%d\n',j);
+	end %for j : data
+	fprintf('For loop have finished until simu env%d\n',i);
+end	%for i : simulation environment
+

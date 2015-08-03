@@ -1,0 +1,77 @@
+% The number of combo & duration
+
+clear all
+close all
+fclose('all');
+
+strEnv = {'stim100' 'addstdp' 'mltstdp' 'stim050' 'stim060' 'stim070' 'stim080' 'stim090'};
+strData =  {'50[Hz]' '100[Hz]' '200[Hz]' '0.3[-]' '0.5[-]' '0.7[-]'};
+strTest =  {'1,000[msec]' '2,000[msec]' '4,000[msec]'...
+			'1,000[msec]' '2,000[msec]' '4,000[msec]'...
+			'wo_learning' 'wo_input mod' ' wo_learning_&_input_mod'};
+strCmp = {'02' '04' '06' '08' '10' '12' '14' '16' '18' '20'};
+strTrl = {'01' '02' '03' '04' '05' '06' '07' '08' '09' '10'};
+
+pltEnv  = 1;
+pltData = [3];
+pltTest = [1];
+pltCmp  = 5:5;
+pltTrl  = 1:1;
+
+dirPrnt = sprintf('../DataBase');
+dirPrntSeq = sprintf('..');
+for i = pltEnv
+	dirEnv = sprintf('%s/%s',dirPrnt,strEnv{i});
+	dirEnvSeq = sprintf('%s/mod-code-longstim02-%s',dirPrntSeq,strEnv{i});
+
+	for j = pltData
+		dirData = sprintf('%s/data%d',dirEnv,j);
+		dirDataSeq = sprintf('%s/data%d',dirEnvSeq,j);
+
+		for k = pltTest
+			dirTest = sprintf('%s/test0%d',dirData,k);
+			dirTestSeq = sprintf('%s/data-test0%d',dirDataSeq,k);
+
+			for l = pltCmp
+				dirCmp = sprintf('%s/cmpr%s',dirTest,strCmp{l});
+
+				for m = pltTrl
+					dirTrl = sprintf('%s/trial%s',dirCmp,strTrl{m});
+					dirTrlSeq = sprintf('%s/espk.%s',dirTestSeq,strTrl{m});
+					load_path = sprintf('%s/dbRSS.mat',dirTrl);
+					load(load_path);
+
+					logical = zeros(2,size(RSS,2));
+					for n = 1:size(RSS,2)
+						logical(1,n,m) = all(0<=RSS{1,n} & RSS{1,n}<=99);
+						logical(2,n,m) = all(100<=RSS{1,n} & RSS{1,n}<=399);
+					end
+					Combo = cell2mat(RSS(6,:));
+					[nCmb(m,:) binCmb] = hist(Combo,50);
+					Dur = cell2mat(RSS(7,:));
+					[nDur(m,:) binDur] = hist(Dur,50);
+				end % for m : after learning trial
+
+				Average = mean(nCmb,1);
+				Sd = std(nCmb,0,1);
+				figure
+				errorbar(binCmb,Average,Sd)
+				title(sprintf('Combo (Trial %s)',strTrl{m}))
+				set(gcf,'Name',sprintf('%s_%s_cmpr=%s',strData{j},strTest{k},strCmp{l}))
+
+				Average = mean(nDur,1);
+				Sd = std(nDur,0,1);
+				figure
+				errorbar(binDur,Average,Sd)
+				title(sprintf('Duration [msec] (Trial %s)',strTrl{m}))
+				set(gcf,'Name',sprintf('%s_%s_cmpr=%s',strData{j},strTest{k},strCmp{l}))
+			end %for l : compression ratio
+
+			fprintf('For loop have finished until test0%d\n',k);
+		end %for k : data-test
+
+		fprintf('For loop have finished until data%d\n',j);
+	end %for j : data
+
+	fprintf('For loop have finished until simu env%d\n',i);
+end	%for i : simulation environment

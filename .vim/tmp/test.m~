@@ -1,0 +1,70 @@
+% test
+
+clear all
+close all
+fclose('all');
+
+% *********************************
+% *** Parameters for simulation ***
+% *********************************
+strEnv = {'stim100' 'addstdp' 'mltstdp' 'stim050' 'stim060' 'stim070' 'stim080' 'stim090'};
+strData =  {'50[Hz]' '100[Hz]' '200[Hz]' '0.3[-]' '0.5[-]' '0.7[-]'};
+strTest =  {'1,000[msec](same)' '2,000[msec](same)' '4,000[msec](same)'...
+			'1,000[msec](diff)' '2,000[msec](diff)' '4,000[msec](diff)'...
+			'wo-learning' 'wo-input mod' ' wo-learning & input mod'};
+strCmp = {'02' '04' '06' '08' '10' '12' '14' '16' '18' '20'};
+strTrl = {'01' '02' '03' '04' '05' '06' '07' '08' '09' '10'};
+
+pltEnv  = 1;	%Simulation environment
+pltData = [3 6];	%Data number
+pltTest = [1 4 7];  %Data-test number
+pltCmp  = 5:5;  %Sequence compression ratio
+pltTrl  = 1:1; %After learning trial number
+
+STIM_TIME = 500;
+ID_G1 = 1:100;
+ID_G2 = 101:200;
+ID_OTHER = 201:400;
+NUM_EXC = 400;
+
+data_dir = '/Users/matsu/Research/LogSTDP';
+working_dir = '/Users/matsu/Documents/MATLAB/LogSTDP';
+% ********************
+% *** Main routine ***
+% ********************
+for i = pltEnv
+	for j = pltData
+		for k = pltTest
+			tic;
+			load_path = sprintf('%s/mod-code-longstim02-%s/data%d/data-test0%d/espk',data_dir,strEnv{i},j,k);
+			espk0 = load(load_path);
+			tbin = 25; % [ms]: default=25ms corresponds 40Hz(Gamma range)
+			trange = [0 110000]; % range for total PCA
+			idFocus = [1:400];
+			ts = trange(1):tbin:trange(2);
+			ns = zeros(NUM_EXC,length(ts)-1);
+			for l=1:size(idFocus,2)
+				neuron = idFocus(l) - 1;
+				tmpi = find(espk0(:,2)==neuron);
+				tmpdata = espk0(tmpi,1);
+				clear tmpns bin
+				[tmpns,bin] = histc(tmpdata,ts);
+				ns(l,:) = tmpns(1:end-1)';
+			end
+			[map mapping] = kernel_pca(ns',3,'gauss',5);
+			tt = 1:4400;
+			figure
+			colormap jet
+			%plot(map(:,1),map(:,2),'o:')
+			%plot3(map(:,1),map(:,2),map(:,3),'o:')
+			%scatter(map(:,1),map(:,2),12,tt)
+			scatter3(map(:,1),map(:,2),map(:,3),12,tt)
+			title(sprintf('%s-%s-%s',strEnv{i},strData{j},strTest{k}))
+
+			tocf
+			fprintf('For loop have finished until test0%d\n',k);
+		end %for k : data-test
+		fprintf('For loop have finished until data%d\n',j);
+	end %for j : data
+	fprintf('For loop have finished until simu env%d\n',i);
+end	%for i : simulation environment

@@ -1,0 +1,309 @@
+% Time course of PCA & bined raster
+
+clear all
+close all
+fclose('all');
+
+% *********************************
+% *** Parameters for simulation ***
+% *********************************
+strEnv = {'stim100' 'addstdp' 'mltstdp' 'stim050' 'stim060' 'stim070' 'stim080' 'stim090'};
+strData =  {'50[Hz]' '100[Hz]' '200[Hz]' '0.3[-]' '0.5[-]' '0.7[-]'};
+strTest =  {'1,000[msec](same)' '2,000[msec](same)' '4,000[msec](same)'...
+            '1,000[msec](diff)' '2,000[msec](diff)' '4,000[msec](diff)'...
+            'wo-learning' 'wo-input mod' ' wo-learning & input mod'};
+strCmp = {'02' '04' '06' '08' '10' '12' '14' '16' '18' '20'};
+strTrl = {'01' '02' '03' '04' '05' '06' '07' '08' '09' '10'};
+
+% *******************************
+% *** Parameters for analysis ***
+% *******************************
+pltEnv  = 1:1;
+pltData = [6];
+pltTest = [1];
+
+BaseTest = [1];
+
+ID_G1 = 1:100;
+ID_G2 = 101:200;
+ID_G3 = 201:400;
+
+idGstim = 1:100;
+idGother = 101:400;
+idFocus = [idGstim idGother];
+NUM_EXC = length(idFocus);
+
+tbin = 25; % [ms]: default=25ms corresponds 40Hz(Gamma range)
+trange = [0 110000]; % range for total PCA
+
+tglPlot = 2;
+
+data_dir = '/Users/matsu/Research/LogSTDP';
+working_dir = '/Users/matsu/Documents/MATLAB/LogSTDP';
+% ********************
+% *** Main routine ***
+% ********************
+for i = pltEnv
+    for j = pltData
+        % *******************************
+        % *** Generate base PCA space ***
+        % *******************************
+        dirEspk = sprintf('%s/mod-code-longstim02-%s/data%d/data-test0%d',data_dir,strEnv{i},j,BaseTest);
+        espk0 = load(sprintf('%s/espk',dirEspk));
+
+        ts = trange(1):tbin:trange(2);
+        ns = zeros(NUM_EXC,length(ts)-1);
+        for l=1:NUM_EXC
+            neuron = idFocus(l) - 1;
+            tmpi = find(espk0(:,2)==neuron);
+            tmpdata = espk0(tmpi,1);
+            clear tmpns bin
+            [tmpns,bin] = histc(tmpdata,ts);
+            ns(l,:) = tmpns(1:end-1)';
+        end
+
+        % *** calc PCA ***
+        pcadata = ns;
+        normalization = 1;
+        switch normalization
+        case 1; % Normalization
+            mm = repmat(mean(ns,1),size(ns,1),1);
+            ss = repmat(std(ns,0,1),size(ns,1),1);
+            pcadata = (ns-mm)./ss;
+            pcadata(:,find(std(ns,0,1)==0)) = 0;
+        case 2;	% Vector divided by its norm
+            for l = 1:size(ns,2)
+                if norm(ns(:,l)) ~= 0
+                    pcadata(:,l) = ns(:,l) ./ norm(ns(:,l));
+                elseif norm(ns(:,l)) == 0
+                    pcadata(:,l) = 0;
+                end
+            end
+        end
+        
+        [signals,PC0,V] = pca1(pcadata);
+        % *******************************
+
+        for k = pltTest
+            load_dir = sprintf('%s/mod-code-longstim02-%s/data%d/data-test0%d',data_dir,strEnv{i},j,k);
+            espk0 = load(sprintf('%s/espk',load_dir));
+
+            switch k
+            case {1,4,7,8,9};
+                tstarts = [0 1000 105000];
+                tdurs = [1000 500 500];
+            case {2,6};
+                tstarts = [0 2000 105000];
+                tdurs = [2000 500 500];
+            case {3,6};
+                tstarts = [0 4000 105000];
+                tdurs = [4000 500 500];
+            end
+            tends = tstarts + tdurs;
+
+            ts = trange(1):tbin:trange(2);
+            ns = zeros(NUM_EXC,length(ts)-1);
+            % elimination of stimulated-period from PCA calculation
+            %tmpi = ((espk(:,1)<tstarts(2))|(tends(2)<=espk(:,1)));
+            %espk = espk(tmpi,:);
+            for l=1:NUM_EXC
+                neuron = idFocus(l) - 1;
+                tmpi = find(espk0(:,2)==neuron);
+                tmpdata = espk0(tmpi,1);
+                clear tmpns bin
+                [tmpns,bin] = histc(tmpdata,ts);
+                ns(l,:) = tmpns(1:end-1)';
+            end
+            
+            % *** calc PCA ***
+            pcadata = ns;
+            normalization = 1;
+            switch normalization
+            case 1; % Normalization
+                mm = repmat(mean(ns,1),size(ns,1),1);
+                ss = repmat(std(ns,0,1),size(ns,1),1);
+                pcadata = (ns-mm)./ss;
+                pcadata(:,find(std(ns,0,1)==0)) = 0;
+            case 2;	% Vector divided by norm of its
+                for l = 1:size(ns,2)
+                    if norm(ns(:,l)) ~= 0
+                        pcadata(:,l) = ns(:,l) ./ norm(ns(:,l));
+                    elseif norm(ns(:,l)) == 0
+                        pcadata(:,l) = 0;
+                    end
+                end
+            end
+            
+            [signals,PC,V] = pca1(pcadata);
+            ratio_v = V/sum(V);
+            %[coeff,score] = princomp(ns);
+            
+            signals = PC0' * pcadata;
+            pdata = signals(1:tglPlot,:);
+
+            % ******************
+            % *** Plot phase ***
+            % ******************
+            if tglPlot==2
+                sPlot1 = 'plot(pdata(1,id{m,n}),pdata(2,id{m,n}),pro{1,n}); hold on';
+                sPlot2 = 'plot(pdata(1,tmpID(1,o)),pdata(2,tmpID(1,o)),''ro'',''MarkerFaceColor'',[1 0 0]*(o/length(tmpID)),''MarkerEdgeColor'',''none'');hold on';
+                %sPlot2 = 'plot(pdata(1,tmpID(1,o)),pdata(2,tmpID(1,o)),''ro'',''MarkerSize'',5+5*(o/length(tmpID)),''MarkerFaceColor'',[1 0 0]*(o/length(tmpID)));hold on';
+            elseif tglPlot==3
+                sPlot1 = 'plot3(pdata(1,id{m,n}),pdata(2,id{m,n}),pdata(3,id{m,n}),pro{1,n}); hold on';
+                sPlot2 = 'plot3(pdata(1,tmpID(1,o)),pdata(2,tmpID(1,o)),pdata(3,tmpID(1,o)),''ro'',''MarkerFaceColor'',[1 0 0]*(o/length(tmpID)),''MarkerEdgeColor'',''none'');hold on';
+                %sPlot2 = 'plot3(pdata(1,tmpID(1,o)),pdata(2,tmpID(1,o)),pdata(3,tmpID(1,o)),''ro'',''MarkerSize'',5+5*(o/length(tmpID)),''MarkerFaceColor'',[1 0 0]*(o/length(tmpID)));hold on';
+            end
+            if sum(k==[1 4 7 8 9])
+                interval = 1000;
+            elseif sum(k==[2 5])
+                interval = 2000;
+            elseif sum(k==[3 6])
+                interval = 4000;
+            end
+            idBin = 1:110000/tbin;
+            idBef = idBin(1,1:100000/tbin);
+            idAft = idBin(1,(100000+tbin)/tbin:110000/tbin);
+
+            idBef2 = reshape(idBef,(interval/2)/tbin,[]);
+            idBefSA = idBef2(:,find(mod(idBef2(end,:),40)==0));
+            idBefEA = idBef2(:,find(mod(idBef2(end,:),40)~=0));
+            idBefSA(:,end+1) = idBefEA(:,1);
+            idBefEA(:,1) = [];
+            idBefSA = reshape(idBefSA,[],1)';
+            idBefEA = reshape(idBefEA,[],1)';
+            idBefSA = sort(idBefSA);
+            thr = .5;
+            idBefEA1 = idBefEA(:,find(mean(ns(:,idBefEA))<thr));
+            idBefEA2 = idBefEA(:,find(mean(ns(:,idBefEA))>=thr));
+
+            idAftSA = idAft;
+            idAftSA(:,(5000+tbin)/tbin:(5000+interval/2)/tbin) = [];
+            idAftEA = idAft((5000+tbin)/tbin:(5000+interval/2)/tbin);
+            idAftEA1 = idAftEA(:,find(mean(ns(:,idAftEA))<thr));
+            idAftEA2 = idAftEA(:,find(mean(ns(:,idAftEA))>=thr));
+
+            if sum(j==[1 2 3])
+                id = {idBefSA idBefEA; idAftSA idAftEA};
+                pro = {'g.' 'r*'};
+                itr = 1:2;
+            elseif sum(j==[4 5 6])
+                id = {idBefSA idBefEA1 idBefEA2; idAftSA idAftEA1 idAftEA2};
+                pro = {'g.' 'b.' 'r*'};
+                itr = 1:3;
+            end
+            figure
+            N1=5;N2=1;
+            sWindow = sprintf('%s %s %s: p1=%d%%, p2=%d%%',strEnv{1,i},strData{1,j},strTest{1,k},round(ratio_v(1:2)*100));
+            set(gcf,'Name',sWindow)
+            for m = 1:2 % During or after learning.
+                if m==1;sTitle='During training.';elseif m==2;sTitle='After learning.';end
+                for n = itr % SA or EA
+                    subplot(3,2,m)
+                    xlabel('PC1')
+                    ylabel('PC2')
+                    title(sTitle)
+                    eval(sPlot1)
+                    tmpx = get(gca,'xlim'); tmpy = get(gca,'ylim');
+                    line([0 0],tmpy,'color','k','linestyle','--','linewidth',1)
+                    line(tmpx,[0 0],'color','k','linestyle','--','linewidth',1)
+                    if sum(j==[1 2 3]) & n==2
+                        subplot(N1,N2,3)
+                        plot(id{m,n},std(ns(ID_G1,id{m,n}),1),'m-o');hold on
+                        plot(id{m,n},std(ns(ID_G2,id{m,n}),1),'c-o');hold on
+                        plot(id{m,n},std(ns(ID_G3,id{m,n}),1),'y-o');hold on
+                        xlim(trange./tbin)
+                        legend('G1','G2','G3','Location','northwest')
+                        title('SD of firing rate')
+                    end
+                    if sum(j==[4 5 6]) & n==3
+                        % Sorting along SD of NUM_EXC dim vector.
+                        tmpID = sortrows([std(ns(:,id{m,n}),1); id{m,n}]');
+                        tmpID = tmpID(:,2)';
+                        for o = 1:length(tmpID)
+                            eval(sPlot2)
+                        end
+                        subplot(N1,N2,3)
+                        plot(id{m,n},std(ns(ID_G1,id{m,n}),1),'m-o');hold on
+                        plot(id{m,n},std(ns(ID_G2,id{m,n}),1),'c-o');hold on
+                        plot(id{m,n},std(ns(ID_G3,id{m,n}),1),'y-o');hold on
+                        xlim(trange./tbin)
+                        legend('G1','G2','G3','Location','northwest')
+                    end
+                    subplot(N1,N2,4)
+                    stem(id{m,n},mean(ns(:,id{m,n}),1),pro{1,n});hold on
+                    xlim(trange./tbin)
+                    title('Mean of firing rate')
+                end
+            end
+            subplot(N1,N2,5)
+            imagesc(ns)
+            xlabel(sWindow)
+
+            fprintf('For loop have finished until test0%d\n',k);
+        end %for k : data-test
+        fprintf('For loop have finished until data%d\n',j);
+    end %for j : data
+    fprintf('For loop have finished until simu env%d\n',i);
+end	%for i : simulation environment
+
+%{
+interval = 1000;
+idBin = 1:110000/tbin;
+idBef = idBin(1,1:100000/tbin);
+idAft = idBin(1,(100000+tbin)/tbin:110000/tbin);
+
+idBef2 = reshape(idBef,(interval/2)/tbin,[]);
+idBefSA = idBef2(:,find(mod(idBef2(end,:),40)==0));
+idBefEA = idBef2(:,find(mod(idBef2(end,:),40)~=0));
+idBefSA(:,end+1) = idBefEA(:,1);
+idBefEA(:,1) = [];
+idBefSA = reshape(idBefSA,[],1)';
+idBefEA = reshape(idBefEA,[],1)';
+idBefSA = sort(idBefSA);
+
+idAftSA = idAft;
+idAftSA(:,(5000+tbin)/tbin:(5000+interval/2)/tbin) = [];
+idAftEA = idAft((5000+tbin)/tbin:(5000+interval/2)/tbin);
+
+for itr = [1:3] % 1:3 = Before, 4:6 = After learning.
+    switch itr
+    case 1;
+        id = idBefSA;
+        pro = '-o';
+    case 2;
+        id = idBefEA(:,find(ns(1,idBefEA)>=1));
+        pro = 'm-o';
+    case 3;
+        id = idBefEA(:,find(ns(1,idBefEA)<1));
+        pro = 'g-o';
+    case 4;
+        id = idAftSA;
+        pro = 'o';
+    case 5;
+        id = idAftEA(:,find(ns(1,idAftEA)>=1));
+        pro = 'mo';
+    case 6;
+        id = idAftEA(:,find(ns(1,idAftEA)<1));
+        pro = 'go';
+    end
+    if tglPlot==2
+        sPlot3 = 'plot(pdata(1,id),pdata(2,id),pro);hold on';
+        %sPlot4 = 'plot(pdata(1,id(itr2)),pdata(2,id(itr2)),''-o'',''MarkerSize'',5+30*(itr2/length(id(1,:))),''MarkerFaceColor'',[1 1 1]*(itr2/length(id(1,:))));hold on';
+        sPlot4 = 'plot(pdata(1,id(itr2)),pdata(2,id(itr2)),''o'',''MarkerFaceColor'',[1 1 1]*(itr2/length(id(1,:))));hold on';
+    elseif tglPlot==3
+        sPlot3 = 'plot3(pdata(1,id),pdata(2,id),pdata(3,id),pro);hold on';
+        %sPlot4 = 'plot3(pdata(1,id(itr2)),pdata(2,id(itr2)),pdata(3,id(itr2)),''-o'',''MarkerSize'',5+30*(itr2/length(id(1,:))),''MarkerFaceColor'',[1 1 1]*(itr2/length(id(1,:))));hold on';
+        sPlot4 = 'plot3(pdata(1,id(itr2)),pdata(2,id(itr2)),pdata(3,id(itr2)),''o'',''MarkerFaceColor'',[1 1 1]*(itr2/length(id(1,:))));hold on';
+    end
+    figure(100)
+    title('Time course of PC from 0 to 110sec')
+    eval(sPlot3)
+    if itr==2
+        figure(200)
+        title('Time course of PC from 100 to 110sec')
+        for itr2 = 1:length(id(1,:))
+            eval(sPlot4)
+        end
+    end
+end
+%}

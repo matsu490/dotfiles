@@ -1,0 +1,130 @@
+% RSS data analyser
+clear all
+close all
+fclose('all');
+
+NUM_EXC = 400; 
+NUM_G1  = 1:100;
+NUM_G2  = 100:200;
+NUM_G3 = 200:400;
+
+strEnv = {'stim100' 'addstdp' 'mltstdp' 'stim050' 'stim060' 'stim070' 'stim080' 'stim090'};
+strData =  {'50[Hz]' '100[Hz]' '200[Hz]' '0.3[-]' '0.5[-]' '0.7[-]'};
+strTest =  {'1,000[msec](same)' '2,000[msec](same)' '4,000[msec](same)'...
+			'1,000[msec](diff)' '2,000[msec](diff)' '4,000[msec](diff)'...
+			'wo learning' 'wo input mod' ' wo learning & input mod'};
+strCmp = {'02' '04' '06' '08' '10' '12' '14' '16' '18' '20'};
+strTrl = {'01' '02' '03' '04' '05' '06' '07' '08' '09' '10'};
+
+anaEnv  = 1;	% Simulation environment (1:8)
+anaData = 1:6;	% Data number (1:6)
+anaTest = 1:9;  % Data-test number (1:9)
+anaCmp  = 5:5;  % Sequence compression ratio (1:10)
+anaTrl  = 1:10;  % After learning trial number (1:10)
+
+data_dir = '/Users/matsu/Research/LogSTDP';
+working_dir = '/Users/matsu/Documents/MATLAB/LogSTDP';
+for i = anaEnv
+	for j = anaData
+		for k = anaTest
+			for l = anaCmp
+				for m = anaTrl
+					% Loading sequence data file
+	                clear load_fname
+					load_fname = sprintf('sequences%s-c%s',strTrl{m},strCmp{l});
+	                analysis_filenum = 1;
+	                switch analysis_filenum
+	                    case 1;
+	                    case 2; load_fname = sprintf('%s.length',load_fname);
+	                    case 3; load_fname = sprintf('%s.appear.cell',load_fname);
+	                    case 4; load_fname = sprintf('%s.appear.syna',load_fname);
+	                end
+					load_path = sprintf('%s/mod-code-longstim02-%s/data%d/data-test0%d/%s',data_dir,strEnv{i},j,k,load_fname);
+	                load(load_path)
+	                tmpi = findstr(load_fname,'-'); load_fname(tmpi) = '_';
+	                eval_str = sprintf('sequences = %s; clear %s', load_fname, load_fname);
+	                eval(eval_str)
+
+					% Count the number of total RSS
+	                if isempty(sequences)
+						RSS.neuronid = 0;
+						RSS.spiket = 0;
+						RSS.isi = 0;
+						RSS.synaid = 0;
+						RSS.weight = 0;
+						RSS.combo = 0;
+						RSS.duration = 0;
+						RSS.class = 0;
+						RSS.rssid = 0;
+	                else
+						% Combo calculation
+						idHeadRSS = find(sequences(:,3)==1);
+						idTailRSS = find(sequences(:,3)==-1);
+						Combo = idTailRSS - idHeadRSS + 1;
+
+						% The number of sequences calculation
+	                    nRSS = length(idHeadRSS);
+
+						% Duration from head to tail of sequence
+						headRSS = sequences(idHeadRSS,:);
+						tailRSS = sequences(idTailRSS,:);
+						Duration = tailRSS(:,1) - headRSS(:,1);
+
+						% Interspike interval calculation
+						tmpSeq1 = sequences(:,1);
+						tmpSeq2 = sequences(:,1);
+						tmpSeq1(1) = [];
+						tmpSeq2(length(sequences)) = [];
+						DeltaTime = tmpSeq1 - tmpSeq2;
+						DeltaTime(length(DeltaTime)+1,1) = 0;
+						DeltaTime(idTailRSS) = [];
+
+						idHeadLink = idHeadRSS - (0:size(idHeadRSS,1)-1)';
+						idTailLink = idTailRSS - (1:size(idTailRSS,1))';
+
+						% Synapse no. of link calculation
+						idPreNeu = sequences(:,2)+1;
+						idPreNeu(length(idPreNeu)) = [];
+						idPostNeu = sequences(:,2)+1;
+						idPostNeu(1) = [];
+						idLinkSyna = (idPreNeu-1)*NUM_EXC+idPostNeu;
+
+						% Synapse weight of link calculation
+						load_str = sprintf('%s/DataBase/%s/data%d/test0%d/synapse.mat',working_dir,strEnv{i},j,k);
+						load(load_str)
+						wLinkSyna = syna_mat(idLinkSyna); 
+
+						% Synapse weight of link calculation
+
+						% Synapse weight of link calculation
+
+						% Identifing the RSS
+						strRSS = {'Neuron ID';'Spike timing';'Interspike interval';'Linear index of synapse';'Synapse weight';'Combo';'Duration';'Class(SA/EA)';'Identifier'};
+
+						for n = 1:nRSS
+							RSS(n).neuronid = sequences(idHeadRSS(n):idTailRSS(n),2);
+							RSS(n).spiket = sequences(idHeadRSS(n):idTailRSS(n),1);
+							RSS(n).isi = DeltaTime(idHeadLink(n):idTailLink(n));
+							RSS(n).synaid = idLinkSyna(idHeadLink(n):idTailLink(n));
+							RSS(n).weight = wLinkSyna(idHeadLink(n):idTailLink(n));
+							RSS(n).combo = Combo(n);
+							RSS(n).duration = Duration(n);
+							RSS(n).class = 0;
+							RSS(n).rssid = 0;
+						end
+	                end
+
+					save_path = sprintf('%s/DataBase/%s/data%d/test0%d/cmpr%s/trial%s/strcRSS.mat',working_dir,strEnv{i},j,k,strCmp{l},strTrl{m});
+					save(save_path,'strRSS','RSS');
+					clear RSS
+					fprintf('For loop have finished until trial %d\n',m);
+				end % for m : after learning trial
+				fprintf('For loop have finished until cmp=%d\n',l);
+			end %for l : compression ratio
+			fprintf('For loop have finished until test0%d\n',k);
+		end %for k : data-test
+		fprintf('For loop have finished until data%d\n',j);
+	end %for j : data
+	fprintf('For loop have finished until simu env%d\n',i);
+end	%for i : simulation environment
+

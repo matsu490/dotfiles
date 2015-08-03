@@ -1,0 +1,138 @@
+% Plot figure(PCA time course) one by one
+
+clear all
+close all
+fclose('all');
+
+% *********************************
+% *** Parameters for simulation ***
+% *********************************
+strEnv = {'stim100' 'addstdp' 'mltstdp' 'stim050' 'stim060' 'stim070' 'stim080' 'stim090'};
+strData =  {'50[Hz]' '100[Hz]' '200[Hz]' '0.3[-]' '0.5[-]' '0.7[-]'};
+strTest =  {'1,000[msec](same)' '2,000[msec](same)' '4,000[msec](same)'...
+			'1,000[msec](diff)' '2,000[msec](diff)' '4,000[msec](diff)'...
+			'wo-learning' 'wo-input mod' ' wo-learning & input mod'};
+strCmp = {'02' '04' '06' '08' '10' '12' '14' '16' '18' '20'};
+strTrl = {'01' '02' '03' '04' '05' '06' '07' '08' '09' '10'};
+
+pltEnv  = 1:1;
+pltData = [1:6];
+pltTest = [1:9];
+
+N1 = 1;
+N2 = 2;
+
+NUM_EXC = 400;
+
+tbin = 25; % [ms]: default=25ms corresponds 40Hz(Gamma range)
+trange = [0 110000]; % range for total PCA
+tstarts = [0 100000 105000]; % range for specific period
+tdurs = [100000 5000 500];
+tends = tstarts + tdurs;
+
+% ********************
+% *** Main routine ***
+% ********************
+dirPrnt = sprintf('../DataBase');
+dirPrntSeq = sprintf('..');
+for i = pltEnv
+	dirEnv = sprintf('%s/%s',dirPrnt,strEnv{i});
+	dirEnvSeq = sprintf('%s/mod-code-longstim02-%s',dirPrntSeq,strEnv{i});
+
+	for j = pltData
+		dirData = sprintf('%s/data%d',dirEnv,j);
+		dirDataSeq = sprintf('%s/data%d',dirEnvSeq,j);
+
+		for k = pltTest
+			dirTest = sprintf('%s/test0%d',dirData,k);
+			dirTestSeq = sprintf('%s/data-test0%d',dirDataSeq,k);
+			load_path = sprintf('%s/espk',dirTestSeq);
+			disp(sprintf('loading: %s ...',load_path));
+			espk0 = load(load_path);
+			disp(sprintf('...done.'));
+
+			disp(sprintf('get spkmat ...'));
+			ts = trange(1):tbin:trange(2);
+			ns = zeros(NUM_EXC,length(ts)-1);
+			% elimination of stimulated-period from PCA calculation
+			%tmpi = ((espk(:,1)<tstarts(2))|(tends(2)<=espk(:,1)));
+			%espk = espk(tmpi,:);
+			for l=1:NUM_EXC
+				neuron = l - 1;
+				tmpi = find(espk0(:,2)==neuron);
+				tmpdata = espk0(tmpi,1);
+				clear tmpns bin
+				[tmpns,bin] = histc(tmpdata,ts);
+				ns(l,:) = tmpns(1:end-1)';
+			end
+			disp(sprintf('...done.'));
+			
+			% *** calc PCA ***
+			pcadata = ns;
+			normalization = 1;
+			switch normalization
+			case 1; % Normalization
+				mm = repmat(mean(ns,1),size(ns,1),1);
+				ss = repmat(std(ns,0,1),size(ns,1),1);
+				pcadata = (ns-mm)./ss;
+				pcadata(:,find(std(ns,0,1)==0)) = 0;
+			case 2;	% Vector divided by norm of its
+				for l = 1:size(ns,2)
+					if norm(ns(:,l)) ~= 0
+						pcadata(:,l) = ns(:,l) ./ norm(ns(:,l));
+					elseif norm(ns(:,l)) == 0
+						pcadata(:,l) = 0;
+					end
+				end
+			end
+			
+			[signals,PC,V] = pca2(pcadata);
+			ratio_v = V/sum(V);
+			%[coeff,score] = princomp(ns);
+			pdata = signals(1:2,:);
+
+			h = figure;
+			%p = get(h,'position');
+			%set(h,'position',[p(1)-300 p(2)-600 p(3) p(4)*2.5])
+
+			for n=1:2
+				subplot(N1,N2,n)
+				if n==1
+					plot(pdata(1,:),pdata(2,:),'-o'); hold on
+					tmpx = get(gca,'xlim'); tmpy = get(gca,'ylim');
+					line([0 0],tmpy,'color','k','linestyle','--','linewidth',1)
+					line(tmpx,[0 0],'color','k','linestyle','--','linewidth',1)
+					title_str = sprintf('%s %s %s: p1=%d%%, p2=%d%%',strEnv{1,i},strData{1,j},strTest{1,k},round(ratio_v(1:2)*100));
+					title(title_str)
+				end
+				for m=1:3
+					switch m
+						case 1; tmpc = 'c';
+						case 2; tmpc = 'g';
+						case 3; tmpc = 'r';
+					end
+					tstart=tstarts(m);
+					tend=tends(m);
+					tmpi = find((tstart<=ts)&(ts<tend));
+					
+					subplot(N1,N2,n)
+					if n==1 | (n==2&m~=1)
+						plot(pdata(1,tmpi),pdata(2,tmpi),sprintf('o%s',tmpc),'linewidth',2); hold on
+					end
+					
+				end
+				if n==2
+					tmpx = get(gca,'xlim'); tmpy = get(gca,'ylim');
+					line([0 0],tmpy,'color','k','linestyle','--','linewidth',1)
+					line(tmpx,[0 0],'color','k','linestyle','--','linewidth',1)
+				end
+			end
+
+			fprintf('For loop have finished until test0%d\n',k);
+		end %for k : data-test
+
+		fprintf('For loop have finished until data%d\n',j);
+	end %for j : data
+
+	fprintf('For loop have finished until simu env%d\n',i);
+end	%for i : simulation environment

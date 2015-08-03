@@ -1,0 +1,74 @@
+%	Firing rate
+
+clear all
+close all
+fclose('all');
+
+NUM_EXC = 400;
+
+strEnv = {'stim100' 'addstdp' 'mltstdp' 'stim050' 'stim060' 'stim070' 'stim080' 'stim090'};
+strData =  {'50[Hz]' '100[Hz]' '200[Hz]' '0.3[-]' '0.5[-]' '0.7[-]'};
+strTest =  {'1,000[msec]' '2,000[msec]' '4,000[msec]'...
+			'1,000[msec]' '2,000[msec]' '4,000[msec]'...
+			'wo learning' 'wo input mod' ' wo learning & input mod'};
+strCmp = {'02' '04' '06' '08' '10' '12' '14' '16' '18' '20'};
+strTrl = {'01' '02' '03' '04' '05' '06' '07' '08' '09' '10'};
+
+pltEnv  = 1:1;
+pltData = 3:3;
+pltTest = 1:1;
+pltCmp  = 5:5;
+pltTrl  = 1:10;
+
+dirPrnt = sprintf('../DataBase');
+dirPrntSeq = sprintf('..');
+for i = pltEnv
+	dirEnv = sprintf('%s/%s',dirPrnt,strEnv{i});
+	dirEnvSeq = sprintf('%s/mod-code-longstim02-%s',dirPrntSeq,strEnv{i});
+
+	for j = pltData
+		dirData = sprintf('%s/data%d',dirEnv,j);
+		dirDataSeq = sprintf('%s/data%d',dirEnvSeq,j);
+
+		for k = pltTest
+			dirTest = sprintf('%s/test0%d',dirData,k);
+			dirTestSeq = sprintf('%s/data-test0%d',dirDataSeq,k);
+
+			figure
+			set(gcf,'Name',[strData{j} '_' strTest{k}])
+
+			for l = pltCmp
+				dirCmp = sprintf('%s/cmpr%s',dirTest,strCmp{l});
+
+				for m = pltTrl
+					dirTrl = sprintf('%s/trial%s',dirCmp,strTrl{m});
+					dirTrlSeq = sprintf('%s/espk',dirTestSeq);
+					load_path = dirTrlSeq;
+					espk_DL = load(load_path);
+					dirTrlSeq = sprintf('%s/espk.%s',dirTestSeq,strTrl{m});
+					load_path = dirTrlSeq;
+					espk_AL = load(load_path);
+
+					tbin = 40;
+					if m==1
+						tbins_DL = 0:tbin:110000;
+						[rate_DL time_DL] = hist(espk_DL(:,1),tbins_DL);
+						subplot(6,1,1)
+						plot(time_DL,rate_DL/NUM_EXC/tbin*1000,'k')
+					end
+					tbins_AL = 0:tbin:2000;
+					[rate_AL time_AL] = hist(espk_AL(:,1),tbins_AL);
+					subplot(6,2,m+2)
+					plot(time_AL,rate_AL/NUM_EXC/tbin*1000,'k')
+				end % for m : after learning trial
+
+			end %for l : compression ratio
+
+			fprintf('For loop have finished until test0%d\n',k);
+		end %for k : data-test
+
+		fprintf('For loop have finished until data%d\n',j);
+	end %for j : data
+
+	fprintf('For loop have finished until simu env%d\n',i);
+end	%for i : simulation environment

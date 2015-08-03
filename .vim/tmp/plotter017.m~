@@ -1,0 +1,148 @@
+%	Cosine(similarity) action matrix each neuron
+
+clear all
+close all
+fclose('all');
+
+tglSave = 1;
+
+strEnv = {'stim100' 'addstdp' 'mltstdp' 'stim050' 'stim060' 'stim070' 'stim080' 'stim090'};
+strData =  {'50[Hz]' '100[Hz]' '200[Hz]' '0.3[-]' '0.5[-]' '0.7[-]'};
+strTest =  {'1,000[msec]' '2,000[msec]' '4,000[msec]'...
+			'1,000[msec]' '2,000[msec]' '4,000[msec]'...
+			'wo_learning' 'wo_input mod' ' wo_learning_&_input_mod'};
+strCmp = {'02' '04' '06' '08' '10' '12' '14' '16' '18' '20'};
+strTrl = {'01' '02' '03' '04' '05' '06' '07' '08' '09' '10'};
+
+NUM_EXC = 400;
+
+pltEnv  = 1;
+pltData = [1:6];
+pltTest = [1:3 7:9]; % fixed value
+pltCmp  = 5:5;
+pltTrl  = 1:1;
+
+tbin = 25; % [ms]: default=25ms corresponds 40Hz(Gamma range)
+tdur = 100000;
+tstart = 0;
+tend = tstart+tdur;
+idGstim = 1:100;
+idGother = 101:200; % representative delegation typical
+
+dirPrnt = sprintf('../DataBase');
+dirPrntSeq = sprintf('..');
+
+for i = pltEnv
+	dirEnv = sprintf('%s/%s',dirPrnt,strEnv{i});
+	dirEnvSeq = sprintf('%s/mod-code-longstim02-%s',dirPrntSeq,strEnv{i});
+
+	for j = pltData
+		dirData = sprintf('%s/data%d',dirEnv,j);
+		dirDataSeq = sprintf('%s/data%d',dirEnvSeq,j);
+
+		for k = pltTest
+			dirTest = sprintf('%s/test0%d',dirData,k);
+			dirTestSeq = sprintf('%s/data-test0%d',dirDataSeq,k);
+			load_path = sprintf('%s/espk',dirTestSeq);
+			espk0 = load(load_path);
+
+			if k==1 | k==4 | k==7	figure;	end
+			clear ns
+
+			for l=1:3
+				if l==1 | l==2
+					switch l
+						case 1; idNeuron = idGstim;
+						case 2; idNeuron = idGother;
+					end
+
+					disp(sprintf('get spkmat ...'));
+					ts = tstart:tbin:tend;
+					ns(:,:,l) = zeros(length(idNeuron),length(ts)-1);
+					for m = 1:length(idNeuron)
+						neuron = idNeuron(m) - 1;
+						tmpi = find(espk0(:,2)==neuron);
+						tmpdata = espk0(tmpi,1);
+						clear tmpns bin
+						[tmpns,bin] = histc(tmpdata,ts);
+						tmpdata = tmpns(1:end-1)';
+						mmm = mean(tmpdata);
+						sss = std(tmpdata);
+						if sss==0; tmpdata = 0; else tmpdata = (tmpdata-mmm)/sss; end
+						ns(m,:,l) = tmpdata;
+					end
+					disp(sprintf('...done.'));
+				end
+				
+				disp(sprintf('get corrmat...'));
+				Cosine = zeros(size(ns(:,:,1),1),size(ns(:,:,1),1)); % Both are size(ns,2)
+				for p  = 1:size(ns(:,:,1),1)
+					for q = 1:size(ns(:,:,1),1)
+						if l==1 | l==2
+							g1 = ns(p,:,l);
+							g2 = ns(q,:,l);
+						else
+							g1 = ns(p,:,1);
+							g2 = ns(q,:,2);
+						end
+						%norm_prod = norm(g1)*norm(g2);
+						norm_prod = sum(g1.^2)^0.5 * sum(g2.^2)^0.5;
+						if norm_prod==0
+							Cosine(p,q) = 0.0;
+						else
+							Cosine(p,q) = sum(g1.*g2)/norm_prod;
+						end
+					end
+				end
+				disp(sprintf('...done'));
+
+ 				switch k
+				case {1 2 3}
+					r = k;
+				case {4 5 6}
+					r = k - 3;
+				case {7 8 9}
+					r = k - 6;
+				end
+				subplot(3,3,l+3*(r-1))
+				%imagesc(s,[0.5 1.0])
+				imagesc(Cosine);hold on
+				pbaspect([1 1 1])
+				set(gca,'xaxislocation','top')
+				switch l
+					case 1; title_str = 'Intra Gstim X-corr.';
+					case 2; title_str = 'Intra Gother X-corr.';
+					case 3; title_str = 'Gstim vs Gother X-corr.';
+				end
+				title(title_str)
+				set(gcf,'Name',[strData{j} '_' strTest{k}])
+				caxis([-1 1])
+				colorbar
+				if l==1
+					ylabel(strTest{k});
+				elseif l==3
+					xlabel('Gother');
+					ylabel('Gstim');
+				end
+			end
+
+			if k==3 | k==9
+				if tglSave
+					dirSave = '../SavedFigures/plotter017';
+					set(gcf,'PaperPositionMode','auto')
+					set(gcf,'Position',[.25 .25 1500 900])
+					filename = sprintf('%s_%s_%s&%s&%s',strEnv{i},strrep(strData{j},'.',','),strTest{k-2:k});
+					filepath = [dirSave '/' filename];
+					saveas(gcf,filepath,'fig')
+					saveas(gcf,filepath,'png')
+				end
+			end
+
+			fprintf('For loop have finished until test0%d\n',k);
+		end %for k : data-test
+
+		fprintf('For loop have finished until data%d\n',j);
+	end %for j : data
+
+	fprintf('For loop have finished until simu env%d\n',i);
+end	%for i : simulation environment

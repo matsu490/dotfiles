@@ -1,0 +1,126 @@
+% test file
+
+clear all
+close all
+fclose('all');
+
+% *********************************
+% *** Parameters for simulation ***
+% *********************************
+strEnv = {'stim100' 'addstdp' 'mltstdp' 'stim050' 'stim060' 'stim070' 'stim080' 'stim090'};
+strData =  {'50[Hz]' '100[Hz]' '200[Hz]' '0.3[-]' '0.5[-]' '0.7[-]'};
+strTest =  {'1,000[msec](same)' '2,000[msec](same)' '4,000[msec](same)'...
+			'1,000[msec](diff)' '2,000[msec](diff)' '4,000[msec](diff)'...
+			'wo-learning' 'wo-input mod' ' wo-learning & input mod'};
+strCmp = {'02' '04' '06' '08' '10' '12' '14' '16' '18' '20'};
+strTrl = {'01' '02' '03' '04' '05' '06' '07' '08' '09' '10'};
+
+pltEnv  = 1;	%Simulation environment
+pltData = [1 4];	%Data number
+pltTest = 1:1;  %Data-test number
+pltCmp  = 5:5;  %Sequence compression ratio
+pltTrl  = 1:2; %After learning trial number
+
+STIM_TIME = 500;
+ID_G1 = 1:100;
+ID_G2 = 101:200;
+ID_OTHER = 201:400;
+NUM_EXC = 400;
+
+tbin = 25; % [ms]: default=25ms corresponds 40Hz(Gamma range)
+trange = [0 110000]; % range for total PCA
+tstarts = [0 100000 105000]; % range for specific period
+tdurs = [100000 5000 500];
+tends = tstarts + tdurs;
+
+% ********************
+% *** Main routine ***
+% ********************
+
+dirPrnt = sprintf('../DataBase');
+dirPrntSeq = sprintf('..');
+
+for i = pltEnv
+	dirEnv = sprintf('%s/%s',dirPrnt,strEnv{i});
+	dirEnvSeq = sprintf('%s/mod-code-longstim02-%s',dirPrntSeq,strEnv{i});
+
+	for j = pltData
+		dirData = sprintf('%s/data%d',dirEnv,j);
+		dirDataSeq = sprintf('%s/data%d',dirEnvSeq,j);
+
+		for k = pltTest
+			dirTest = sprintf('%s/test0%d',dirData,k);
+			dirTestSeq = sprintf('%s/data-test0%d',dirDataSeq,k);
+
+			for l = pltCmp
+				dirCmp = sprintf('%s/cmpr%s',dirTest,strCmp{l});
+
+				for m = pltTrl
+					dirTrl = sprintf('%s/trial%s',dirCmp,strTrl{m});
+					dirTrlSeq = sprintf('%s/sequences%s-c%s',dirTestSeq,strTrl{m},strCmp{l});
+
+					load_path = sprintf('%s/espk.%s',dirTestSeq,strTrl{m});
+					espk = load(load_path);
+					load_path = sprintf('%s/dbRSS.mat',dirTrl);
+					load(load_path);
+
+					%figure
+					%plot(espk(:,1),espk(:,2),'.')
+					%xlim([500 1500])
+
+					combos = unique(cell2mat(RSS(6,:)));
+					HtoH = 0;
+
+					for n = 1:size(combos,2)
+						tmpID = find(cell2mat(RSS(6,:))==combos(n));
+						x = cell2mat(RSS(2,tmpID));
+						y = cell2mat(RSS(1,tmpID));
+						Y = RSS(1,tmpID);
+						Duration = cell2mat(RSS(7,tmpID));
+						Tempo = zeros(1,size(Y,2));
+
+						for o = 1:size(Y,2)
+							pare = 0;
+							idPare = [0 0];
+
+							for p = 1:size(Y,2)
+								if isequal(Y(1,p),Y(1,o)) & isequal(Duration(1,p),Duration(1,o))
+									pare = pare + 1;
+									idPare(1,pare) = p;
+								end
+								if pare>3
+									sprintf('break... (%s-%s-Cmp=%s-Trl=%s-%dcombo)',strData{j},strTest{k},strCmp{l},strTrl{m},combos(n))
+									break
+								end
+							end
+
+							if idPare(1,1)~=0 & idPare(1,2)~=0
+								Tempo(1,o) = x(1,idPare(1,2))-x(1,idPare(1,1));
+							end
+						end
+
+						HtoH = [HtoH Tempo];
+					end
+
+					HtoH(:,1) = [];
+					HH(m,:) = hist(HtoH,0:20:1000); 
+
+					fprintf('For loop have finished until trial %d\n',m);
+				end
+
+				figure
+				errorbar(mean(HH,1),std(HH,1))
+				title(sprintf('%s-%s-%s-Cmp=%s',strEnv{i},strData{j},strTest{k},strCmp{l}))
+				xlabel('Duration of H to H [msec]')
+
+				fprintf('For loop have finished until cmp=%d\n',l);
+			end
+
+			fprintf('For loop have finished until test0%d\n',k);
+		end %for k : data-test
+
+		fprintf('For loop have finished until data%d\n',j);
+	end %for j : data
+
+	fprintf('For loop have finished until simu env%d\n',i);
+end	%for i : simulation environment

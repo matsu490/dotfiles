@@ -1,0 +1,93 @@
+clear all
+close all
+fclose('all');
+
+
+maindir = './';
+
+dirs{1} = 'mod-code-longstim02-stim100';
+dirs{2} = 'mod-code-longstim02-addstdp';
+dirs{3} = 'mod-code-longstim02-mltstdp';
+dirs{4} = 'mod-code-longstim02-stim050';
+dirs{5} = 'mod-code-longstim02-stim060';
+dirs{6} = 'mod-code-longstim02-stim070';
+dirs{7} = 'mod-code-longstim02-stim080';
+dirs{8} = 'mod-code-longstim02-stim090';
+
+for i=1:length(dirs); labels{i} = dirs{i}(end-6:end); end
+
+for i=1:6; ns1{i}=sprintf('data%d',i); end
+for i=1:9; ns2{i}=sprintf('data-test0%d',i); end
+
+after_iter_num=10;
+
+corr_str = '10';
+fileheader = 'sequences';
+
+
+seqstat_all = zeros(2,length(ns2));
+
+for i=1:6%length(ns1) % for data1, data2, ...
+    for j=1:9%length(ns2) % for data-test01, data-test02, ...
+
+        for n=1:1 % for simulation environment
+
+            clear seqstat
+            for k=1:after_iter_num % for #simulation after learning (10 trials)
+                
+                
+                
+                
+                
+                clear load_fname
+                if k>=10
+                    load_fname = sprintf('%s%d-c%s',fileheader,k,corr_str);
+                else
+                    load_fname = sprintf('%s0%d-c%s',fileheader,k,corr_str);
+                end
+                
+                
+                analysis_filenum = 1;
+                switch analysis_filenum
+                    case 1;
+                    case 2; load_fname = sprintf('%s.length');
+                    case 3; load_fname = sprintf('%s.appear.cell');
+                    case 4; load_fname = sprintf('%s.appear.syna');
+                end
+
+                load_str = sprintf('%s/%s/%s/%s/%s',maindir,dirs{n},ns1{i},ns2{j},load_fname);
+                load(load_str)
+
+                tmpi = findstr(load_fname,'-');
+                load_fname(tmpi) = '_';
+
+                eval_str = sprintf('sequences = %s; clear %s', load_fname, load_fname);
+                eval(eval_str)
+
+
+
+                if isempty(sequences)
+                    seqstat(k) = 0;
+                else
+                    seqstat(k) = length(find(sequences(:,3)==1));
+                end
+                
+                
+            end % for k
+
+            seqstat_all(1,j) = mean(seqstat);
+            seqstat_all(2,j) = std(seqstat);
+            
+            
+        end % for n
+
+	    end % for j
+
+			figure(i)
+			bar(1:length(ns2),seqstat_all(1,:)); hold on;
+			errorbar(1:length(ns2),seqstat_all(1,:),seqstat_all(2,:))
+			%set(gca,'xticklabel',labels)
+end % for i
+
+
+

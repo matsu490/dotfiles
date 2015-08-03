@@ -1,0 +1,45 @@
+%	Raster plot
+
+clear all
+close all
+fclose('all');
+
+strEnv = {'stim100' 'addstdp' 'mltstdp' 'stim050' 'stim060' 'stim070' 'stim080' 'stim090'};
+strData =  {'50[Hz]' '100[Hz]' '200[Hz]' '0.3[-]' '0.5[-]' '0.7[-]'};
+strTest =  {'1,000[msec]' '2,000[msec]' '4,000[msec]'...
+			'1,000[msec]' '2,000[msec]' '4,000[msec]'...
+			'wo_learning' 'wo_input mod' ' wo_learning_&_input_mod'};
+strCmp = {'02' '04' '06' '08' '10' '12' '14' '16' '18' '20'};
+strTrl = {'01' '02' '03' '04' '05' '06' '07' '08' '09' '10'};
+
+pltEnv  = 1:1;
+pltData = [1];
+pltTest = [3];
+pltCmp  = 5:5;
+pltTrl  = 1:10;
+
+data_dir = '/Users/matsu/Research/LogSTDP';
+working_dir = '/Users/matsu/Documents/MATLAB/LogSTDP';
+for i = pltEnv
+	for j = pltData
+		for k = pltTest
+			load_dir = sprintf('%s/mod-code-longstim02-%s/data%d/data-test0%d',data_dir,strEnv{i},j,k);
+			espk0 = load(sprintf('%s/espk',load_dir));
+			figure
+			plot(espk0(:,1),espk0(:,2),'k.','MarkerSize',1)
+			set(gcf,'Name',[strData{j} '_' strTest{k}])
+			for l = pltCmp
+				figure
+				for m = pltTrl
+					espk = load(sprintf('%s/espk.%s',load_dir,strTrl{m}));
+					subplot(5,2,m)
+					plot(espk(:,1),espk(:,2),'k.','MarkerSize',1)
+					set(gcf,'Name',[strData{j} '_' strTest{k}])
+				end % for m : after learning trial
+			end %for l : compression ratio
+			fprintf('For loop have finished until test0%d\n',k);
+		end %for k : data-test
+		fprintf('For loop have finished until data%d\n',j);
+	end %for j : data
+	fprintf('For loop have finished until simu env%d\n',i);
+end	%for i : simulation environment
