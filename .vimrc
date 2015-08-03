@@ -10,8 +10,9 @@ if has('mac')
     set noshowmode
     set backspace=start,eol,indent  "バックスペースの設定
     set clipboard=unnamed,autoselect    "ヤンクとクリップボードの共有
-    set backupdir=~/.vim/tmp    "バックアップファイル（~）ディレクトリ
-    set directory=~/.vim/tmp    "スワップファイルディレクトリ
+    set backupdir=~/.vim_tmp    "バックアップファイル（~）ディレクトリ
+    set directory=~/.vim_tmp    "スワップファイルディレクトリ
+    set undodir=~/.vim_tmp      " .un~（undoファイル）ディレクトリ
     set wildmenu                "補完時にワイルドメニューを表示する
     set wildmode=longest:full   "補完方法の設定
 
