@@ -2,10 +2,13 @@
 " For Mac OS X
 "===========================================================
 if has('mac')
-    "set columns=100        "ウィンドウの幅(iTerm2で表示に不具合があるため無効化)
-    "set lines=52           "ウィンドウの高さ（iTerm2で表示に不具合があるため無効化）
-    set number              "行番号の表示
-    set laststatus=2        "ステータスライン表示行数
+    " ******************************************************
+    " Standard settings
+    " ******************************************************
+    "set columns=100        " Window width (iTerm2で表示に不具合があるため無効化)
+    "set lines=52           " Window height（iTerm2で表示に不具合があるため無効化）
+    set number              " represent row number
+    set laststatus=2        " status line
     set showtabline=2
     set noshowmode
     set backspace=start,eol,indent  "バックスペースの設定
@@ -27,7 +30,9 @@ if has('mac')
     set t_Co=256
     let g:Powerline_symbols = 'compatible'
 
-    "************タブ・インデント関連*************
+    " ******************************************************
+    " Tab/indent settings
+    " ******************************************************
     set expandtab			"タブ＝＞スペース
     set tabstop=4			"タブの表示幅
     set shiftwidth=4		"自動インデント幅
@@ -36,7 +41,9 @@ if has('mac')
     set smartindent			"改行時に行末に合わせてインデント
     set nolist				"タブ文字の可視化（Ｃ＋ｉ）
 
-    "************ 検索関連 *************"
+    " ******************************************************
+    " Searching settings
+    " ******************************************************
     set ignorecase			"大文字小文字を区別しない
     set smartcase			"検索文字に大文字がある場合大文字小文字を区別
     set incsearch			"インクリメンタルサーチ
@@ -45,7 +52,9 @@ if has('mac')
     cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
     cnoremap <expr> ? getcmdtype() == '?' ? '\?' : '?'
 
-    "************ NeoBundle *************
+    " ******************************************************
+    " NeoBundle
+    " ******************************************************
     set nocompatible
     filetype off
     if has('vim_starting')
@@ -164,7 +173,9 @@ if has('mac')
     "************ syntastic *************
     let g:syntastic_python_checkers = ['flake8']
 
-    "************ lightline.vim *************
+    " ******************************************************
+    " lightline.vim
+    " ******************************************************
     if s:has_plugin('lightline.vim') "{{{2
         let g:lightline = {
                     \ 'colorscheme': 'solarized',
@@ -242,10 +253,14 @@ if has('mac')
 
     endif
 
-    "************ neocomplete *************
+    " ******************************************************
+    " neocomplete
+    " ******************************************************
     let g:neocomplete#enable_at_startup = 1
 
-    "************ watchdogs *************
+    " ******************************************************
+    " watchdogs
+    " ******************************************************
     "let g:quickrun_config = {
     "\   'watchdogs_checker/_':{
     "\       'hook/close_quickfix/enable_exit':1,
@@ -255,10 +270,14 @@ if has('mac')
     "let g:watchdogs_check_BufWritePost_enable = 1
     "let g:watchdogs_check_CursorHold_enable = 1
 
-    "************ pyflakes-vim *************
+    " ******************************************************
+    " pyflakes-vim
+    " ******************************************************
     "let g:pyflakes_use_quickfix = 0
 
-    "************ vim-template *************
+    " ******************************************************
+    " vim-template
+    " ******************************************************
     "テンプレート中に含まれる特定文字列を置き換える
     autocmd User plugin-template-loaded call s:template_keywords()
     function! s:template_keywords()
@@ -271,14 +290,18 @@ if has('mac')
         \ |     silent! execute 'normal! "_da>'
         \ | endif
 
-    "************ vim-indent-guides *************
+    " ******************************************************
+    " vim-indent-guides
+    " ******************************************************
     let g:indent_guides_auto_colors=0
     autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd   ctermbg=black
     autocmd VimEnter,Colorscheme * :hi IndentGuidesEven  ctermbg=darkgray
     let g:indent_guides_enable_on_vim_startup=1
     let g:indent_guides_guide_size=1
 
-    "************ jedi-vim *************
+    " ******************************************************
+    " jedi-vim
+    " ******************************************************
     autocmd FileType python setlocal completeopt-=preview
     let g:jedi#completions_enabled = 1
     let g:jedi#auto_vim_configuration = 0
@@ -286,7 +309,9 @@ if has('mac')
     let g:jedi#documentation_command = '<leader>K'
     let g:jedi#rename_command = '<leader>R'
 
-    "************エイリアス*************
+    " ******************************************************
+    " Alias settings
+    " ******************************************************
     noremap j gj
     noremap k gk
     noremap H 10h
@@ -341,10 +366,173 @@ endif
 " For Unix
 "===========================================================
 if has('unix')
+    " ******************************************************
+    " Alias settings
+    " ******************************************************
+    noremap j gj
+    noremap k gk
+    noremap H 10h
+    noremap J 10j
+    noremap K 10k
+    noremap L 10l
+    noremap gr gT
+    noremap n nzz
+    noremap N Nzz
+    inoremap ( ()<Left>
+    inoremap { {}<Left>
+    inoremap [ []<Left>
+    nnoremap <Space> i<Space><Esc>
+    nnoremap <Tab> I<Tab><Esc>
+    nnoremap <Return> o<Esc>
+    nnoremap <C-e> :NERDTreeTabsToggle<CR>
+    nnoremap <F5> :<C-u>source ~/.vimrc<CR>
+
+    nnoremap s <Nop>
+    nnoremap sj <C-w>j
+    nnoremap sk <C-w>k
+    nnoremap sl <C-w>l
+    nnoremap sh <C-w>h
+    nnoremap sJ <C-w>J
+    nnoremap sK <C-w>K
+    nnoremap sL <C-w>L
+    nnoremap sH <C-W>H
+    nnoremap s+ <C-w>+
+    nnoremap s- <C-w>-
+    nnoremap s< <C-w><
+    nnoremap s> <C-w>>
+    nnoremap sr <C-w>r
+    nnoremap s= <C-w>=
+    nnoremap sw <C-w>w
+    nnoremap so <C-w>_<C-w>|
+    nnoremap sO <C-w>=
+    nnoremap sn :<C-u>noh<CR>
+    nnoremap sN :<C-u>bn<CR>
+    nnoremap sP :<C-u>bp<CR>
+    nnoremap st :<C-u>tabnew<CR>
+    nnoremap sT :<C-u>Unite tab<CR>
+    nnoremap ss :<C-u>sp<CR>
+    nnoremap sv :<C-u>vs<CR>
+    nnoremap sq :<C-u>q<CR>
+    nnoremap sQ :<C-u>bd<CR>
+    nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
+    nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
+    nnoremap su :<C-u>Unite file<CR>
 endif
 
 "===========================================================
 " For windows 32bit or 64bit
 "===========================================================
 if has('win32') || has('win64')
+    " ***************************************************
+    " Standard settings
+    " ***************************************************
+    set number              "行番号の表示
+    set laststatus=2        "ステータスライン表示行数
+    set showtabline=2
+    set noshowmode
+    set backspace=start,eol,indent  "バックスペースの設定
+    set clipboard=unnamed,autoselect    "ヤンクとクリップボードの共有
+    set backupdir=~/.vim_tmp    "バックアップファイル（~）ディレクトリ
+    set directory=~/.vim_tmp    "スワップファイルディレクトリ
+    set undodir=~/.vim_tmp      " .un~（undoファイル）ディレクトリ
+    set wildmenu                "補完時にワイルドメニューを表示する
+    set wildmode=longest:full   "補完方法の設定
+
+    "カラースキーマ設定
+    "set t_Co=256
+    "syntax enable 
+    "set background=dark
+    "colorscheme solarized
+
+    "Powerline用フォント設定
+    "let g:Powerline_symbols = 'fancy'
+    set t_Co=256
+    let g:Powerline_symbols = 'compatible'
+
+    " ******************************************************
+    " NeoBundle
+    " ******************************************************
+"    set nocompatible
+"    filetype off
+"    if has('vim_starting')
+"        set runtimepath+=~/.vim/bundle/neobundle.vim
+"    endif
+"    call neobundle#begin(expand('~/.vim/bundle'))
+"    NeoBundleFetch 'Shougo/neobundle.vim'
+"    call neobundle#end()
+"    filetype plugin on
+"    filetype indent on
+
+    " ******************************************************
+    " Tab/indent settings
+    " ******************************************************
+    set expandtab			"タブ＝＞スペース
+    set tabstop=4			"タブの表示幅
+    set shiftwidth=4		"自動インデント幅
+    set softtabstop=4		"タブの入力幅
+    set autoindent			"改行時のインデント継続
+    set smartindent			"改行時に行末に合わせてインデント
+    set nolist				"タブ文字の可視化（Ｃ＋ｉ）
+
+    " ******************************************************
+    " Searching settings
+    " ******************************************************
+    set ignorecase			"大文字小文字を区別しない
+    set smartcase			"検索文字に大文字がある場合大文字小文字を区別
+    set incsearch			"インクリメンタルサーチ
+    set hlsearch			"検索マッチテキストをハイライト
+    " バックスラッシュやクエスチョンを状況に合わせ自動的にエスケープ
+    cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
+    cnoremap <expr> ? getcmdtype() == '?' ? '\?' : '?'
+    " ******************************************************
+    " Alias settings
+    " ******************************************************
+    noremap j gj
+    noremap k gk
+    noremap H 10h
+    noremap J 10j
+    noremap K 10k
+    noremap L 10l
+    noremap gr gT
+    noremap n nzz
+    noremap N Nzz
+    inoremap ( ()<Left>
+    inoremap { {}<Left>
+    inoremap [ []<Left>
+    nnoremap <Space> i<Space><Esc>
+    nnoremap <Tab> I<Tab><Esc>
+    nnoremap <Return> o<Esc>
+    nnoremap <C-e> :NERDTreeTabsToggle<CR>
+    nnoremap <F5> :<C-u>source ~/.vimrc<CR>
+
+    nnoremap s <Nop>
+    nnoremap sj <C-w>j
+    nnoremap sk <C-w>k
+    nnoremap sl <C-w>l
+    nnoremap sh <C-w>h
+    nnoremap sJ <C-w>J
+    nnoremap sK <C-w>K
+    nnoremap sL <C-w>L
+    nnoremap sH <C-W>H
+    nnoremap s+ <C-w>+
+    nnoremap s- <C-w>-
+    nnoremap s< <C-w><
+    nnoremap s> <C-w>>
+    nnoremap sr <C-w>r
+    nnoremap s= <C-w>=
+    nnoremap sw <C-w>w
+    nnoremap so <C-w>_<C-w>|
+    nnoremap sO <C-w>=
+    nnoremap sn :<C-u>noh<CR>
+    nnoremap sN :<C-u>bn<CR>
+    nnoremap sP :<C-u>bp<CR>
+    nnoremap st :<C-u>tabnew<CR>
+    nnoremap sT :<C-u>Unite tab<CR>
+    nnoremap ss :<C-u>sp<CR>
+    nnoremap sv :<C-u>vs<CR>
+    nnoremap sq :<C-u>q<CR>
+    nnoremap sQ :<C-u>bd<CR>
+    nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
+    nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
+    nnoremap su :<C-u>Unite file<CR>
 endif
