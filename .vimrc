@@ -61,7 +61,6 @@ if has('mac')
         set runtimepath+=~/.vim/bundle/neobundle.vim
     endif
     call neobundle#begin(expand('~/.vim/bundle'))
-
     " Colorscheme plugins
     NeoBundle 'b4b4r07/solarized.vim', { "base" : $HOME."/.vim/colors" }
     NeoBundle 'nanotech/jellybeans.vim', { "base" : $HOME."/.vim/colors" }
@@ -127,6 +126,7 @@ if has('mac')
     set number
 
     " Colorscheme
+    let s:is_windows = has('win16') || has('win32') || has('win64')
     set background=dark
     if !has('gui_running')
         set background=dark
