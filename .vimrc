@@ -172,6 +172,8 @@ if has('mac')
 
     "************ syntastic *************
     let g:syntastic_python_checkers = ['flake8']
+    let g:syntastic_python_flake8_args = '--ignore="E501"'
+    "let g:syntastic_python_flake8_args = '--ignore="E501,F403"'
 
     "*******************************************************
     " lightline.vim
@@ -207,7 +209,7 @@ if has('mac')
         endfunction
 
         function! MyReadonly()
-            return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? '\ue0a2' : ''
+            return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? "\ue0a2" : ''
         endfunction
 
         function! MyFilename()
@@ -222,7 +224,7 @@ if has('mac')
         function! MyFugitive()
             if &ft !~? 'vimfiler\|gundo' && exists("*fugitive#head")
                 let _ = fugitive#head()
-                return strlen(_) ? '\ue0a0'._ : ''
+                return strlen(_) ? "\ue0a0"._ : ''
             endif
             return ''
         endfunction
