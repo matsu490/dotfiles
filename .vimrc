@@ -364,12 +364,11 @@ if has('mac')
     nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
     nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
     nnoremap su :<C-u>Unite file<CR>
-endif
 
 "===========================================================
 " For Unix
 "===========================================================
-if has('unix')
+elseif has('unix')
     "*******************************************************
     " Standard settings
     "*******************************************************
@@ -595,12 +594,11 @@ if has('unix')
     nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
     nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
     nnoremap su :<C-u>Unite file<CR>
-endif
 
 "===========================================================
 " For windows 32bit or 64bit
 "===========================================================
-if has('win32') || has('win64')
+elseif has('win32') || has('win64')
     "****************************************************
     " Standard settings
     "****************************************************
