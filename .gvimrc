@@ -17,6 +17,7 @@ if has('unix')
     set lines=52			"ウィンドウの高さ
     colorscheme solarized	"カラースキーマ設定
     set encoding=utf-8		"utf-8表示
+
 endif
 
 "===========================================================
