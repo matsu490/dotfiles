@@ -702,6 +702,7 @@ elseif has('win32') || has('win64')
     call neobundle#begin(expand('~/.vim/bundle'))
     NeoBundleFetch 'Shougo/neobundle.vim'
     NeoBundle 'Shougo/unite.vim'
+    NeoBundle 'Shougo/neocomplete'
     NeoBundle 'scrooloose/nerdtree'
     NeoBundle 'scrooloose/syntastic'
     NeoBundle 'jistr/vim-nerdtree-tabs'
@@ -710,6 +711,11 @@ elseif has('win32') || has('win64')
     call neobundle#end()
     filetype plugin on
     filetype indent on
+
+    "*******************************************************
+    " neocomplete
+    "*******************************************************
+    let g:neocomplete#enable_at_startup = 1
 
     "*******************************************************
     " syntastic
