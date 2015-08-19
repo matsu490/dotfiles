@@ -615,6 +615,7 @@ if has('win32') || has('win64')
     set undodir=~/.vim_tmp      " .un~（undoファイル）ディレクトリ
     set wildmenu                "補完時にワイルドメニューを表示する
     set wildmode=longest:full   "補完方法の設定
+    colorscheme molokai
 
     "*******************************************************
     " Tab/indent settings
@@ -711,15 +712,6 @@ if has('win32') || has('win64')
     filetype indent on
 
     "*******************************************************
-    " vim-indent-guides
-    "*******************************************************
-    let g:indent_guides_auto_colors=0
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd   ctermbg=black
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven  ctermbg=darkgray
-    let g:indent_guides_enable_on_vim_startup=1
-    let g:indent_guides_guide_size=1
-
-    "*******************************************************
     " syntastic
     "*******************************************************
     let g:syntastic_python_checkers = ['flake8']
@@ -813,4 +805,14 @@ if has('win32') || has('win64')
         endfunction
 
     endif
+
+    "*******************************************************
+    " vim-indent-guides
+    "*******************************************************
+    let g:indent_guides_auto_colors=0
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd   ctermbg=black
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven  ctermbg=darkgray
+    let g:indent_guides_enable_on_vim_startup=1
+    let g:indent_guides_guide_size=1
+
 endif
