@@ -738,36 +738,34 @@ elseif has('win32') || has('win64')
     endfunction
     if s:has_plugin('lightline.vim')
         let g:lightline = {
-                    \ 'colorscheme': 'solarized',
-                    \ 'mode_map': {'c': 'NORMAL'},
-                    \ 'active': {
-                    \   'left': [ [ 'mode', 'paste' ],
-                    \             [ 'readonly', 'filepath', 'filename', 'modified' ] ],
-                    \   'right' : [ [ 'lineinfo', 'percent' ],
-                    \               [ 'filetype', 'fileencoding', 'fileformat' ] ]
-                    \ },
-                    \ 'component_function': {
-                    \   'modified': 'MyModified',
-                    \   'readonly': 'MyReadonly',
-                    \   'fugitive': 'MyFugitive',
-                    \   'filepath': 'MyFilepath',
-                    \   'filename': 'MyFilename',
-                    \   'fileformat': 'MyFileformat',
-                    \   'filetype': 'MyFiletype',
-                    \   'fileencoding': 'MyFileencoding',
-                    \   'mode': 'MyMode',
-                    \   'date': 'MyDate'
-                    \ },
-                    \ 'separator': {'left': "\ue0b0", 'right': "\ue0b2"},
-                    \ 'subseparator': {'left': "\ue0b1", 'right': "\ue0b3"}
-                    \ }
+                          \ 'colorscheme': 'solarized',
+                          \ 'mode_map': {'c': 'NORMAL'},
+                          \ 'active': {
+                          \   'left': [ [ 'mode', 'paste' ],
+                          \             [ 'readonly', 'filepath', 'filename', 'modified' ] ],
+                          \   'right' : [ [ 'lineinfo', 'percent' ],
+                          \               [ 'filetype', 'fileencoding', 'fileformat' ] ]
+                          \ },
+                          \ 'component_function': {
+                          \   'modified': 'MyModified',
+                          \   'readonly': 'MyReadonly',
+                          \   'fugitive': 'MyFugitive',
+                          \   'filepath': 'MyFilepath',
+                          \   'filename': 'MyFilename',
+                          \   'fileformat': 'MyFileformat',
+                          \   'filetype': 'MyFiletype',
+                          \   'fileencoding': 'MyFileencoding',
+                          \   'mode': 'MyMode',
+                          \   'date': 'MyDate'
+                          \ },
+                        \ }
 
         function! MyModified()
             return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
         endfunction
 
         function! MyReadonly()
-            return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? '\ue0a2' : ''
+            return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? 'ReadOnly' : ''
         endfunction
 
         function! MyFilename()
@@ -782,7 +780,7 @@ elseif has('win32') || has('win64')
         function! MyFugitive()
             if &ft !~? 'vimfiler\|gundo' && exists("*fugitive#head")
                 let _ = fugitive#head()
-                return strlen(_) ? '\ue0a0'._ : ''
+                return strlen(_) ? 'Fugitive'._ : ''
             endif
             return ''
         endfunction
