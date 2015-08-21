@@ -187,7 +187,8 @@ if has('mac')
                     \ 'active': {
                     \   'left': [ [ 'mode', 'paste' ],
                     \             [ 'readonly', 'filepath', 'filename', 'modified' ] ],
-                    \   'right' : [ [ 'lineinfo', 'percent' ],
+                    \   'right' : [ [ 'lineinfo' ],
+                    \               [ 'percent' ],
                     \               [ 'filetype', 'fileencoding', 'fileformat' ] ]
                     \ },
                     \ 'component_function': {
@@ -202,8 +203,8 @@ if has('mac')
                     \   'mode': 'MyMode',
                     \   'date': 'MyDate'
                     \ },
-                    \ 'separator': {'left': "\ue0b0", 'right': "\ue0b2"},
-                    \ 'subseparator': {'left': "\ue0b1", 'right': "\ue0b3"}
+                    \ 'separator': {'left': "\ue0b0", 'right': "\ue0b2 "},
+                    \ 'subseparator': {'left': "\ue0b1", 'right': "\ue0b3 "}
                     \ }
 
         function! MyModified()
@@ -352,6 +353,7 @@ if has('mac')
     nnoremap sw <C-w>w
     nnoremap so <C-w>_<C-w>|
     nnoremap sO <C-w>=
+    nnoremap sp :<C-u>setl paste! paste?<CR>
     nnoremap sn :<C-u>noh<CR>
     nnoremap sN :<C-u>bn<CR>
     nnoremap sP :<C-u>bp<CR>
@@ -359,7 +361,6 @@ if has('mac')
     nnoremap sT :<C-u>Unite tab<CR>
     nnoremap ss :<C-u>sp<CR>
     nnoremap sv :<C-u>vs<CR>
-    nnoremap sq :<C-u>q<CR>
     nnoremap sQ :<C-u>bd<CR>
     nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
     nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
