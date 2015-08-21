@@ -182,12 +182,13 @@ if has('mac')
     "*******************************************************
     if s:has_plugin('lightline.vim') "{{{2
         let g:lightline = {
-                    \ 'colorscheme': 'solarized',
+                    \ 'colorscheme': 'sceaduhelm',
                     \ 'mode_map': {'c': 'NORMAL'},
                     \ 'active': {
                     \   'left': [ [ 'mode', 'paste' ],
                     \             [ 'readonly', 'filepath', 'filename', 'modified' ] ],
-                    \   'right' : [ [ 'lineinfo', 'percent' ],
+                    \   'right' : [ [ 'lineinfo' ],
+                    \               [ 'percent' ],
                     \               [ 'filetype', 'fileencoding', 'fileformat' ] ]
                     \ },
                     \ 'component_function': {
@@ -352,6 +353,7 @@ if has('mac')
     nnoremap sw <C-w>w
     nnoremap so <C-w>_<C-w>|
     nnoremap sO <C-w>=
+    nnoremap sp :<C-u>setl paste! paste?<CR>
     nnoremap sn :<C-u>noh<CR>
     nnoremap sN :<C-u>bn<CR>
     nnoremap sP :<C-u>bp<CR>
@@ -359,7 +361,6 @@ if has('mac')
     nnoremap sT :<C-u>Unite tab<CR>
     nnoremap ss :<C-u>sp<CR>
     nnoremap sv :<C-u>vs<CR>
-    nnoremap sq :<C-u>q<CR>
     nnoremap sQ :<C-u>bd<CR>
     nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
     nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
