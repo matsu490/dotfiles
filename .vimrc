@@ -182,7 +182,7 @@ if has('mac')
     "*******************************************************
     if s:has_plugin('lightline.vim') "{{{2
         let g:lightline = {
-                    \ 'colorscheme': 'sceaduhelm',
+                    \ 'colorscheme': 'solarized',
                     \ 'mode_map': {'c': 'NORMAL'},
                     \ 'active': {
                     \   'left': [ [ 'mode', 'paste' ],
