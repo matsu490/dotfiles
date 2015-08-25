@@ -583,6 +583,7 @@ elseif has('unix')
     nnoremap sw <C-w>w
     nnoremap so <C-w>_<C-w>|
     nnoremap sO <C-w>=
+    nnoremap sp :<C-u>setl paste! paste?<CR>
     nnoremap sn :<C-u>noh<CR>
     nnoremap sN :<C-u>bn<CR>
     nnoremap sP :<C-u>bp<CR>
@@ -679,6 +680,7 @@ elseif has('win32') || has('win64')
     nnoremap sw <C-w>w
     nnoremap so <C-w>_<C-w>|
     nnoremap sO <C-w>=
+    nnoremap sp :<C-u>setl paste! paste?<CR>
     nnoremap sn :<C-u>noh<CR>
     nnoremap sN :<C-u>bn<CR>
     nnoremap sP :<C-u>bp<CR>
