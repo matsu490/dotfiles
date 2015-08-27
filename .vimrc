@@ -706,6 +706,8 @@ elseif has('win32') || has('win64')
     NeoBundleFetch 'Shougo/neobundle.vim'
     NeoBundle 'Shougo/unite.vim'
     NeoBundle 'Shougo/neocomplete'
+    NeoBundle 'Shougo/vimproc.vim'
+    NeoBundle 'Shougo/vimshell.vim'
     NeoBundle 'scrooloose/nerdtree'
     NeoBundle 'scrooloose/syntastic'
     NeoBundle 'jistr/vim-nerdtree-tabs'
