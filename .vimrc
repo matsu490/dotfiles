@@ -19,17 +19,6 @@ if has('mac')
     set wildmenu                "補完時にワイルドメニューを表示する
     set wildmode=longest:full   "補完方法の設定
 
-    "カラースキーマ設定
-    "set t_Co=256
-    "syntax enable 
-    "set background=dark
-    "colorscheme solarized
-
-    "Powerline用フォント設定
-    "let g:Powerline_symbols = 'fancy'
-    set t_Co=256
-    let g:Powerline_symbols = 'compatible'
-
     "*******************************************************
     " Tab/indent settings
     "*******************************************************
@@ -77,16 +66,11 @@ if has('mac')
     NeoBundle 'ujihisa/unite-colorscheme'
     "NeoBundle 'osyo-manga/shabadou.vim'
     "NeoBundle 'osyo-manga/vim-watchdogs'
-    "NeoBundle 'kevinw/pyflakes-vim'
     "NeoBundle 'davidhalter/jedi-vim'
     NeoBundle 'jceb/vim-hier'
     NeoBundle 'scrooloose/nerdtree'
     NeoBundle 'scrooloose/syntastic'
     NeoBundle 'jistr/vim-nerdtree-tabs'
-    "NeoBundle 'bling/vim-airline'
-    "NeoBundle 'alpaca-tc/alpaca_powertabline'
-    "NeoBundle 'Lokaltog/powerline', {'rtp' : 'powerline/bindings/vim'}
-    "NeoBundle 'Lokaltog/powerline-fontpatcher'
     NeoBundle 'itchyny/lightline.vim'
     NeoBundle 'nathanaelkane/vim-indent-guides'
     call neobundle#end()
@@ -146,6 +130,7 @@ if has('mac')
             endif
         else
             " Vim for CUI
+            " let g:solarized_termcolors=256
             if s:has_plugin('solarized.vim')
                 try
                     colorscheme solarized-cui
@@ -274,11 +259,6 @@ if has('mac')
     "call watchdogs#setup(g:quickrun_config)
     "let g:watchdogs_check_BufWritePost_enable = 1
     "let g:watchdogs_check_CursorHold_enable = 1
-
-    "*******************************************************
-    " pyflakes-vim
-    "*******************************************************
-    "let g:pyflakes_use_quickfix = 0
 
     "*******************************************************
     " vim-template
