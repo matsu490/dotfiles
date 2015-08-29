@@ -2,9 +2,11 @@ export PATH="/usr/local/bin:$PATH"
 export PATH="/usr/local/Cellar:$PATH"
 export PYTHONPATH="/usr/local/lib/wxPython/lib/python2.7/site-packages/wx-3.0-osx_cocoa:/usr/local/lib/wxPython/lib/python2.7/site-packages:$PYTHONPATH"
 export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.7.0"
-#export PATH="/Users/matsu/.vim/bundle/powerline/scripts:$PATH"
-#source /Users/matsu/.vim/bundle/powerline/powerline/bindings/zsh/powerline.zsh
-#export TERM='xterm-256color'
+eval $(/usr/local/bin/gdircolors /Users/matsu/Downloads/dircolors-solarized-master/dircolors.ansi-universal)
+alias ls='gls --color=auto'
+alias -s py='python'
+alias -s html='google-chrome'
+alias -s {gif,jpg,jpeg,png,bmp}='display'
 
 function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
 function is_osx() { [[ $OSTYPE == darwin* ]]; }
