@@ -617,7 +617,7 @@ elseif has('win32') || has('win64')
     set undodir=~/.vim_tmp      " .un~（undoファイル）ディレクトリ
     set wildmenu                "補完時にワイルドメニューを表示する
     set wildmode=longest:full   "補完方法の設定
-    colorscheme pablo
+    colorscheme solarized
 
     "*******************************************************
     " Tab/indent settings
@@ -686,6 +686,7 @@ elseif has('win32') || has('win64')
     nnoremap sP :<C-u>bp<CR>
     nnoremap st :<C-u>tabnew<CR>
     nnoremap sT :<C-u>Unite tab<CR>
+    nnoremap sf :<C-u>VimFiler<CR>
     nnoremap ss :<C-u>sp<CR>
     nnoremap sv :<C-u>vs<CR>
     nnoremap sq :<C-u>q<CR>
@@ -708,6 +709,7 @@ elseif has('win32') || has('win64')
     NeoBundle 'Shougo/neocomplete'
     NeoBundle 'Shougo/vimproc.vim'
     NeoBundle 'Shougo/vimshell.vim'
+    NeoBundle 'Shougo/vimfiler'
     NeoBundle 'scrooloose/nerdtree'
     NeoBundle 'scrooloose/syntastic'
     NeoBundle 'jistr/vim-nerdtree-tabs'
