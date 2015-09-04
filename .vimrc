@@ -563,6 +563,7 @@ elseif has('unix')
     nnoremap sw <C-w>w
     nnoremap so <C-w>_<C-w>|
     nnoremap sO <C-w>=
+    nnoremap sp :<C-u>setl paste! paste?<CR>
     nnoremap sn :<C-u>noh<CR>
     nnoremap sN :<C-u>bn<CR>
     nnoremap sP :<C-u>bp<CR>
@@ -596,6 +597,7 @@ elseif has('win32') || has('win64')
     set undodir=~/.vim_tmp      " .un~（undoファイル）ディレクトリ
     set wildmenu                "補完時にワイルドメニューを表示する
     set wildmode=longest:full   "補完方法の設定
+    colorscheme solarized
 
     "*******************************************************
     " Tab/indent settings
@@ -658,11 +660,13 @@ elseif has('win32') || has('win64')
     nnoremap sw <C-w>w
     nnoremap so <C-w>_<C-w>|
     nnoremap sO <C-w>=
+    nnoremap sp :<C-u>setl paste! paste?<CR>
     nnoremap sn :<C-u>noh<CR>
     nnoremap sN :<C-u>bn<CR>
     nnoremap sP :<C-u>bp<CR>
     nnoremap st :<C-u>tabnew<CR>
     nnoremap sT :<C-u>Unite tab<CR>
+    nnoremap sf :<C-u>VimFiler<CR>
     nnoremap ss :<C-u>sp<CR>
     nnoremap sv :<C-u>vs<CR>
     nnoremap sq :<C-u>q<CR>
@@ -682,6 +686,10 @@ elseif has('win32') || has('win64')
     call neobundle#begin(expand('~/.vim/bundle'))
     NeoBundleFetch 'Shougo/neobundle.vim'
     NeoBundle 'Shougo/unite.vim'
+    NeoBundle 'Shougo/neocomplete'
+    NeoBundle 'Shougo/vimproc.vim'
+    NeoBundle 'Shougo/vimshell.vim'
+    NeoBundle 'Shougo/vimfiler'
     NeoBundle 'scrooloose/nerdtree'
     NeoBundle 'scrooloose/syntastic'
     NeoBundle 'jistr/vim-nerdtree-tabs'
@@ -692,18 +700,19 @@ elseif has('win32') || has('win64')
     filetype indent on
 
     "*******************************************************
-    " vim-indent-guides
+    " neocomplete
     "*******************************************************
-    let g:indent_guides_auto_colors=0
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd   ctermbg=black
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven  ctermbg=darkgray
-    let g:indent_guides_enable_on_vim_startup=1
-    let g:indent_guides_guide_size=1
+    let g:neocomplete#enable_at_startup = 1
 
     "*******************************************************
     " syntastic
     "*******************************************************
     let g:syntastic_python_checkers = ['flake8']
+
+    "*******************************************************
+    " vimfiler
+    "*******************************************************
+    let g:vimfiler_enable_auto_cd = 1
 
     "*******************************************************
     " lightline.vim
@@ -720,36 +729,34 @@ elseif has('win32') || has('win64')
     endfunction
     if s:has_plugin('lightline.vim')
         let g:lightline = {
-                    \ 'colorscheme': 'solarized',
-                    \ 'mode_map': {'c': 'NORMAL'},
-                    \ 'active': {
-                    \   'left': [ [ 'mode', 'paste' ],
-                    \             [ 'readonly', 'filepath', 'filename', 'modified' ] ],
-                    \   'right' : [ [ 'lineinfo', 'percent' ],
-                    \               [ 'filetype', 'fileencoding', 'fileformat' ] ]
-                    \ },
-                    \ 'component_function': {
-                    \   'modified': 'MyModified',
-                    \   'readonly': 'MyReadonly',
-                    \   'fugitive': 'MyFugitive',
-                    \   'filepath': 'MyFilepath',
-                    \   'filename': 'MyFilename',
-                    \   'fileformat': 'MyFileformat',
-                    \   'filetype': 'MyFiletype',
-                    \   'fileencoding': 'MyFileencoding',
-                    \   'mode': 'MyMode',
-                    \   'date': 'MyDate'
-                    \ },
-                    \ 'separator': {'left': "\ue0b0", 'right': "\ue0b2"},
-                    \ 'subseparator': {'left': "\ue0b1", 'right': "\ue0b3"}
-                    \ }
+                          \ 'colorscheme': 'solarized',
+                          \ 'mode_map': {'c': 'NORMAL'},
+                          \ 'active': {
+                          \   'left': [ [ 'mode', 'paste' ],
+                          \             [ 'readonly', 'filepath', 'filename', 'modified' ] ],
+                          \   'right' : [ [ 'lineinfo', 'percent' ],
+                          \               [ 'filetype', 'fileencoding', 'fileformat' ] ]
+                          \ },
+                          \ 'component_function': {
+                          \   'modified': 'MyModified',
+                          \   'readonly': 'MyReadonly',
+                          \   'fugitive': 'MyFugitive',
+                          \   'filepath': 'MyFilepath',
+                          \   'filename': 'MyFilename',
+                          \   'fileformat': 'MyFileformat',
+                          \   'filetype': 'MyFiletype',
+                          \   'fileencoding': 'MyFileencoding',
+                          \   'mode': 'MyMode',
+                          \   'date': 'MyDate'
+                          \ },
+                        \ }
 
         function! MyModified()
             return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
         endfunction
 
         function! MyReadonly()
-            return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? '\ue0a2' : ''
+            return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? 'ReadOnly' : ''
         endfunction
 
         function! MyFilename()
@@ -764,7 +771,7 @@ elseif has('win32') || has('win64')
         function! MyFugitive()
             if &ft !~? 'vimfiler\|gundo' && exists("*fugitive#head")
                 let _ = fugitive#head()
-                return strlen(_) ? '\ue0a0'._ : ''
+                return strlen(_) ? 'Fugitive'._ : ''
             endif
             return ''
         endfunction
@@ -794,4 +801,14 @@ elseif has('win32') || has('win64')
         endfunction
 
     endif
+
+    "*******************************************************
+    " vim-indent-guides
+    "*******************************************************
+    let g:indent_guides_auto_colors=0
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd   ctermbg=black
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven  ctermbg=darkgray
+    let g:indent_guides_enable_on_vim_startup=1
+    let g:indent_guides_guide_size=1
+
 endif
