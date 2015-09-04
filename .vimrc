@@ -63,14 +63,15 @@ if has('mac')
     NeoBundle 'Shougo/neocomplete'
     NeoBundle 'Shougo/unite.vim'
     NeoBundle 'Shougo/vimproc'
+    NeoBundle 'Shougo/vimfiler'
     NeoBundle 'ujihisa/unite-colorscheme'
     "NeoBundle 'osyo-manga/shabadou.vim'
     "NeoBundle 'osyo-manga/vim-watchdogs'
     "NeoBundle 'davidhalter/jedi-vim'
     NeoBundle 'jceb/vim-hier'
-    NeoBundle 'scrooloose/nerdtree'
     NeoBundle 'scrooloose/syntastic'
-    NeoBundle 'jistr/vim-nerdtree-tabs'
+    "NeoBundle 'scrooloose/nerdtree'
+    "NeoBundle 'jistr/vim-nerdtree-tabs'
     NeoBundle 'itchyny/lightline.vim'
     NeoBundle 'nathanaelkane/vim-indent-guides'
     call neobundle#end()
@@ -249,6 +250,11 @@ if has('mac')
     let g:neocomplete#enable_at_startup = 1
 
     "*******************************************************
+    " vimfiler
+    "*******************************************************
+    let g:vimfiler_enable_auto_cd = 1
+
+    "*******************************************************
     " watchdogs
     "*******************************************************
     "let g:quickrun_config = {
@@ -312,7 +318,7 @@ if has('mac')
     nnoremap <Space> i<Space><Esc>
     nnoremap <Tab> I<Tab><Esc>
     nnoremap <Return> o<Esc>
-    nnoremap <C-e> :NERDTreeTabsToggle<CR>
+    "nnoremap <C-e> :NERDTreeTabsToggle<CR>
     nnoremap <F5> :<C-u>source ~/.vimrc<CR>
 
     nnoremap s <Nop>
@@ -339,6 +345,7 @@ if has('mac')
     nnoremap sP :<C-u>bp<CR>
     nnoremap st :<C-u>tabnew<CR>
     nnoremap sT :<C-u>Unite tab<CR>
+    nnoremap sf :<C-u>VimFiler<CR>
     nnoremap ss :<C-u>sp<CR>
     nnoremap sv :<C-u>vs<CR>
     nnoremap sQ :<C-u>bd<CR>
@@ -542,7 +549,6 @@ elseif has('unix')
     nnoremap <Space> i<Space><Esc>
     nnoremap <Tab> I<Tab><Esc>
     nnoremap <Return> o<Esc>
-    nnoremap <C-e> :NERDTreeTabsToggle<CR>
     nnoremap <F5> :<C-u>source ~/.vimrc<CR>
 
     nnoremap s <Nop>
@@ -639,7 +645,6 @@ elseif has('win32') || has('win64')
     nnoremap <Space> i<Space><Esc>
     nnoremap <Tab> I<Tab><Esc>
     nnoremap <Return> o<Esc>
-    nnoremap <C-e> :NERDTreeTabsToggle<CR>
     nnoremap <F5> :<C-u>source ~/.vimrc<CR>
 
     nnoremap s <Nop>
