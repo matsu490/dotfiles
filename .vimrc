@@ -371,9 +371,9 @@ elseif has('unix')
     set undodir=~/.vim_tmp      " .un~（undoファイル）ディレクトリ
     set wildmenu                "補完時にワイルドメニューを表示する
     set wildmode=longest:full   "補完方法の設定
+    colorscheme solarized
     set t_Co=256
     set background=dark
-    colorscheme solarized
 
     "*******************************************************
     " Tab/indent settings
