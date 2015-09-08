@@ -412,7 +412,7 @@ elseif has('unix')
     NeoBundle 'Shougo/unite.vim'
     "NeoBundle 'Shougo/vimproc'
     NeoBundle 'itchyny/lightline.vim'
-    "NeoBundle 'nathanaelkane/vim-indent-guides'
+    NeoBundle 'nathanaelkane/vim-indent-guides'
     "NeoBundle 'davidhalter/jedi-vim'
     NeoBundle 'b4b4r07/solarized.vim', { "base" : $HOME."/.vim/colors" }
     call neobundle#end()
