@@ -1,8 +1,8 @@
 case ${OSTYPE} in
 #===========================================================
-# For Mac OS X
+# For Mac OS X in laboratory
 #===========================================================
-    darwin)
+    darwin12.0)
         export PATH="/usr/local/bin:$PATH"
         export PATH="/usr/local/Cellar:$PATH"
         export PYTHONPATH="/usr/local/lib/wxPython/lib/python2.7/site-packages/wx-3.0-osx_cocoa:/usr/local/lib/wxPython/lib/python2.7/site-packages:$PYTHONPATH"
