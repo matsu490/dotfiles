@@ -168,33 +168,57 @@ if has('mac')
     " lightline.vim
     "*******************************************************
     if s:has_plugin('lightline.vim') "{{{2
-        let g:lightline = {
-                    \ 'colorscheme': 'solarized',
-                    \ 'mode_map': {'c': 'NORMAL'},
-                    \ 'active': {
-                    \   'left': [ [ 'mode', 'paste' ],
-                    \             [ 'readonly', 'filepath', 'filename', 'modified' ] ],
-                    \   'right' : [ [ 'lineinfo' ],
-                    \               [ 'percent' ],
-                    \               [ 'filetype', 'fileencoding', 'fileformat' ] ]
-                    \ },
-                    \ 'component_function': {
-                    \   'modified': 'MyModified',
-                    \   'readonly': 'MyReadonly',
-                    \   'fugitive': 'MyFugitive',
-                    \   'filepath': 'MyFilepath',
-                    \   'filename': 'MyFilename',
-                    \   'fileformat': 'MyFileformat',
-                    \   'filetype': 'MyFiletype',
-                    \   'fileencoding': 'MyFileencoding',
-                    \   'mode': 'MyMode',
-                    \   'date': 'MyDate'
-                    \ },
-                    \ if !has('gui_running')
-                    \     'separator': {'left': "\ue0b0", 'right': "\ue0b2 "},
-                    \     'subseparator': {'left': "\ue0b1", 'right': "\ue0b3 "}
-                    \ endif
-                    \ }
+        if has('gui_running')
+            let g:lightline = {
+                        \ 'colorscheme': 'solarized',
+                        \ 'mode_map': {'c': 'NORMAL'},
+                        \ 'active': {
+                        \   'left': [ [ 'mode', 'paste' ],
+                        \             [ 'readonly', 'filepath', 'filename', 'modified' ] ],
+                        \   'right' : [ [ 'lineinfo' ],
+                        \               [ 'percent' ],
+                        \               [ 'filetype', 'fileencoding', 'fileformat' ] ]
+                        \ },
+                        \ 'component_function': {
+                        \   'modified': 'MyModified',
+                        \   'readonly': 'MyReadonly',
+                        \   'fugitive': 'MyFugitive',
+                        \   'filepath': 'MyFilepath',
+                        \   'filename': 'MyFilename',
+                        \   'fileformat': 'MyFileformat',
+                        \   'filetype': 'MyFiletype',
+                        \   'fileencoding': 'MyFileencoding',
+                        \   'mode': 'MyMode',
+                        \   'date': 'MyDate'
+                        \ }
+                        \ }
+        else
+            let g:lightline = {
+                        \ 'colorscheme': 'solarized',
+                        \ 'mode_map': {'c': 'NORMAL'},
+                        \ 'active': {
+                        \   'left': [ [ 'mode', 'paste' ],
+                        \             [ 'readonly', 'filepath', 'filename', 'modified' ] ],
+                        \   'right' : [ [ 'lineinfo' ],
+                        \               [ 'percent' ],
+                        \               [ 'filetype', 'fileencoding', 'fileformat' ] ]
+                        \ },
+                        \ 'component_function': {
+                        \   'modified': 'MyModified',
+                        \   'readonly': 'MyReadonly',
+                        \   'fugitive': 'MyFugitive',
+                        \   'filepath': 'MyFilepath',
+                        \   'filename': 'MyFilename',
+                        \   'fileformat': 'MyFileformat',
+                        \   'filetype': 'MyFiletype',
+                        \   'fileencoding': 'MyFileencoding',
+                        \   'mode': 'MyMode',
+                        \   'date': 'MyDate'
+                        \ },
+                        \ 'separator': {'left': "\ue0b0", 'right': "\ue0b2 "},
+                        \ 'subseparator': {'left': "\ue0b1", 'right': "\ue0b3 "}
+                        \ }
+        endif
 
         function! MyModified()
             return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
