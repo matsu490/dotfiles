@@ -190,8 +190,10 @@ if has('mac')
                     \   'mode': 'MyMode',
                     \   'date': 'MyDate'
                     \ },
-                    \ 'separator': {'left': "\ue0b0", 'right': "\ue0b2 "},
-                    \ 'subseparator': {'left': "\ue0b1", 'right': "\ue0b3 "}
+                    \ if !has('gui_running')
+                    \     'separator': {'left': "\ue0b0", 'right': "\ue0b2 "},
+                    \     'subseparator': {'left': "\ue0b1", 'right': "\ue0b3 "}
+                    \ endif
                     \ }
 
         function! MyModified()
