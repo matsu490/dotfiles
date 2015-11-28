@@ -1,13 +1,9 @@
 "===========================================================
-" For Mac OS X
+" For common environment
 "===========================================================
-"
-if has('mac')
     "*******************************************************
     " Standard settings
     "*******************************************************
-    "set columns=100        " Window width (iTerm2で表示に不具合があるため無効化)
-    "set lines=52           " Window height（iTerm2で表示に不具合があるため無効化）
     set number              " represent row number
     set laststatus=2        " status line
     set showtabline=2
@@ -42,6 +38,63 @@ if has('mac')
     cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
     cnoremap <expr> ? getcmdtype() == '?' ? '\?' : '?'
 
+"*******************************************************
+" Alias settings
+"*******************************************************
+noremap j gj
+noremap k gk
+noremap H 10h
+noremap J 10j
+noremap K 10k
+noremap L 10l
+noremap gr gT
+noremap n nzz
+noremap N Nzz
+inoremap ( ()<Left>
+inoremap { {}<Left>
+inoremap [ []<Left>
+nnoremap <Space> i<Space><Esc>
+nnoremap <Tab> I<Tab><Esc>
+nnoremap <Return> o<Esc>
+"nnoremap <C-e> :NERDTreeTabsToggle<CR>
+nnoremap <F5> :<C-u>source ~/.vimrc<CR>
+
+nnoremap s <Nop>
+nnoremap sj <C-w>j
+nnoremap sk <C-w>k
+nnoremap sl <C-w>l
+nnoremap sh <C-w>h
+nnoremap sJ <C-w>J
+nnoremap sK <C-w>K
+nnoremap sL <C-w>L
+nnoremap sH <C-W>H
+nnoremap s+ <C-w>+
+nnoremap s- <C-w>-
+nnoremap s< <C-w><
+nnoremap s> <C-w>>
+nnoremap sr <C-w>r
+nnoremap s= <C-w>=
+nnoremap sw <C-w>w
+nnoremap so <C-w>_<C-w>|
+nnoremap sO <C-w>=
+nnoremap sp :<C-u>setl paste! paste?<CR>
+nnoremap sn :<C-u>noh<CR>
+nnoremap sN :<C-u>bn<CR>
+nnoremap sP :<C-u>bp<CR>
+nnoremap st :<C-u>tabnew<CR>
+nnoremap sT :<C-u>Unite tab<CR>
+nnoremap sf :<C-u>VimFiler<CR>
+nnoremap ss :<C-u>sp<CR>
+nnoremap sv :<C-u>vs<CR>
+nnoremap sQ :<C-u>bd<CR>
+nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
+nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
+nnoremap su :<C-u>Unite file<CR>
+
+"===========================================================
+" For Mac OS X
+"===========================================================
+if has('mac')
     "*******************************************************
     " NeoBundle
     "*******************************************************
@@ -327,58 +380,6 @@ if has('mac')
     let g:jedi#documentation_command = '<leader>K'
     let g:jedi#rename_command = '<leader>R'
 
-    "*******************************************************
-    " Alias settings
-    "*******************************************************
-    noremap j gj
-    noremap k gk
-    noremap H 10h
-    noremap J 10j
-    noremap K 10k
-    noremap L 10l
-    noremap gr gT
-    noremap n nzz
-    noremap N Nzz
-    inoremap ( ()<Left>
-    inoremap { {}<Left>
-    inoremap [ []<Left>
-    nnoremap <Space> i<Space><Esc>
-    nnoremap <Tab> I<Tab><Esc>
-    nnoremap <Return> o<Esc>
-    "nnoremap <C-e> :NERDTreeTabsToggle<CR>
-    nnoremap <F5> :<C-u>source ~/.vimrc<CR>
-
-    nnoremap s <Nop>
-    nnoremap sj <C-w>j
-    nnoremap sk <C-w>k
-    nnoremap sl <C-w>l
-    nnoremap sh <C-w>h
-    nnoremap sJ <C-w>J
-    nnoremap sK <C-w>K
-    nnoremap sL <C-w>L
-    nnoremap sH <C-W>H
-    nnoremap s+ <C-w>+
-    nnoremap s- <C-w>-
-    nnoremap s< <C-w><
-    nnoremap s> <C-w>>
-    nnoremap sr <C-w>r
-    nnoremap s= <C-w>=
-    nnoremap sw <C-w>w
-    nnoremap so <C-w>_<C-w>|
-    nnoremap sO <C-w>=
-    nnoremap sp :<C-u>setl paste! paste?<CR>
-    nnoremap sn :<C-u>noh<CR>
-    nnoremap sN :<C-u>bn<CR>
-    nnoremap sP :<C-u>bp<CR>
-    nnoremap st :<C-u>tabnew<CR>
-    nnoremap sT :<C-u>Unite tab<CR>
-    nnoremap sf :<C-u>VimFiler<CR>
-    nnoremap ss :<C-u>sp<CR>
-    nnoremap sv :<C-u>vs<CR>
-    nnoremap sQ :<C-u>bd<CR>
-    nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
-    nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
-    nnoremap su :<C-u>Unite file<CR>
 
 "===========================================================
 " For Unix
@@ -387,42 +388,9 @@ elseif has('unix')
     "*******************************************************
     " Standard settings
     "*******************************************************
-    set number              " represent row number
-    set laststatus=2        " status line
-    set showtabline=2
-    set noshowmode
-    set backspace=start,eol,indent  "バックスペースの設定
-    set clipboard=unnamed,autoselect    "ヤンクとクリップボードの共有
-    set backupdir=~/.vim_tmp    "バックアップファイル（~）ディレクトリ
-    set directory=~/.vim_tmp    "スワップファイルディレクトリ
-    set undodir=~/.vim_tmp      " .un~（undoファイル）ディレクトリ
-    set wildmenu                "補完時にワイルドメニューを表示する
-    set wildmode=longest:full   "補完方法の設定
     colorscheme solarized
     set t_Co=256
     set background=dark
-
-    "*******************************************************
-    " Tab/indent settings
-    "*******************************************************
-    set expandtab			"タブ＝＞スペース
-    set tabstop=4			"タブの表示幅
-    set shiftwidth=4		"自動インデント幅
-    set softtabstop=4		"タブの入力幅
-    set autoindent			"改行時のインデント継続
-    set smartindent			"改行時に行末に合わせてインデント
-    set nolist				"タブ文字の可視化（Ｃ＋ｉ）
-
-    "*******************************************************
-    " Searching settings
-    "*******************************************************
-    set ignorecase			"大文字小文字を区別しない
-    set smartcase			"検索文字に大文字がある場合大文字小文字を区別
-    set incsearch			"インクリメンタルサーチ
-    set hlsearch			"検索マッチテキストをハイライト
-    " バックスラッシュやクエスチョンを状況に合わせ自動的にエスケープ
-    cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
-    cnoremap <expr> ? getcmdtype() == '?' ? '\?' : '?'
 
     "*******************************************************
     " NeoBundle
@@ -561,58 +529,6 @@ elseif has('unix')
     let g:jedi#documentation_command = '<leader>K'
     let g:jedi#rename_command = '<leader>R'
 
-    "*******************************************************
-    " Alias settings
-    "*******************************************************
-    noremap j gj
-    noremap k gk
-    noremap H 10h
-    noremap J 10j
-    noremap K 10k
-    noremap L 10l
-    noremap gr gT
-    noremap n nzz
-    noremap N Nzz
-    inoremap ( ()<Left>
-    inoremap { {}<Left>
-    inoremap [ []<Left>
-    nnoremap <Space> i<Space><Esc>
-    nnoremap <Tab> I<Tab><Esc>
-    nnoremap <Return> o<Esc>
-    nnoremap <F5> :<C-u>source ~/.vimrc<CR>
-
-    nnoremap s <Nop>
-    nnoremap sj <C-w>j
-    nnoremap sk <C-w>k
-    nnoremap sl <C-w>l
-    nnoremap sh <C-w>h
-    nnoremap sJ <C-w>J
-    nnoremap sK <C-w>K
-    nnoremap sL <C-w>L
-    nnoremap sH <C-W>H
-    nnoremap s+ <C-w>+
-    nnoremap s- <C-w>-
-    nnoremap s< <C-w><
-    nnoremap s> <C-w>>
-    nnoremap sr <C-w>r
-    nnoremap s= <C-w>=
-    nnoremap sw <C-w>w
-    nnoremap so <C-w>_<C-w>|
-    nnoremap sO <C-w>=
-    nnoremap sp :<C-u>setl paste! paste?<CR>
-    nnoremap sn :<C-u>noh<CR>
-    nnoremap sN :<C-u>bn<CR>
-    nnoremap sP :<C-u>bp<CR>
-    nnoremap st :<C-u>tabnew<CR>
-    nnoremap sT :<C-u>Unite tab<CR>
-    nnoremap ss :<C-u>sp<CR>
-    nnoremap sv :<C-u>vs<CR>
-    nnoremap sq :<C-u>q<CR>
-    nnoremap sQ :<C-u>bd<CR>
-    nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
-    nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
-    nnoremap su :<C-u>Unite file<CR>
-
 "===========================================================
 " For windows 32bit or 64bit
 "===========================================================
@@ -622,93 +538,8 @@ elseif has('win32') || has('win64')
     "****************************************************
     set columns=100        " Window width
     set lines=52           " Window height
-    set number              "行番号の表示
-    set laststatus=2        "ステータスライン表示行数
-    set showtabline=2
-    set noshowmode
-    set backspace=start,eol,indent  "バックスペースの設定
-    set clipboard=unnamed,autoselect    "ヤンクとクリップボードの共有
-    set backupdir=~/.vim_tmp    "バックアップファイル（~）ディレクトリ
-    set directory=~/.vim_tmp    "スワップファイルディレクトリ
-    set undodir=~/.vim_tmp      " .un~（undoファイル）ディレクトリ
-    set wildmenu                "補完時にワイルドメニューを表示する
-    set wildmode=longest:full   "補完方法の設定
-    colorscheme molokai
-
-    "*******************************************************
-    " Tab/indent settings
-    "*******************************************************
-    set expandtab			"タブ＝＞スペース
-    set tabstop=4			"タブの表示幅
-    set shiftwidth=4		"自動インデント幅
-    set softtabstop=4		"タブの入力幅
-    set autoindent			"改行時のインデント継続
-    set smartindent			"改行時に行末に合わせてインデント
-    set nolist				"タブ文字の可視化（Ｃ＋ｉ）
-
-    "*******************************************************
-    " Searching settings
-    "*******************************************************
-    set ignorecase			"大文字小文字を区別しない
-    set smartcase			"検索文字に大文字がある場合大文字小文字を区別
-    set incsearch			"インクリメンタルサーチ
-    set hlsearch			"検索マッチテキストをハイライト
-    " バックスラッシュやクエスチョンを状況に合わせ自動的にエスケープ
-    cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
-    cnoremap <expr> ? getcmdtype() == '?' ? '\?' : '?'
-
-    "*******************************************************
-    " Alias settings
-    "*******************************************************
-    noremap j gj
-    noremap k gk
-    noremap H 10h
-    noremap J 10j
-    noremap K 10k
-    noremap L 10l
-    noremap gr gT
-    noremap n nzz
-    noremap N Nzz
-    inoremap ( ()<Left>
-    inoremap { {}<Left>
-    inoremap [ []<Left>
-    nnoremap <Space> i<Space><Esc>
-    nnoremap <Tab> I<Tab><Esc>
-    nnoremap <Return> o<Esc>
-    nnoremap <F5> :<C-u>source ~/.vimrc<CR>
-
-    nnoremap s <Nop>
-    nnoremap sj <C-w>j
-    nnoremap sk <C-w>k
-    nnoremap sl <C-w>l
-    nnoremap sh <C-w>h
-    nnoremap sJ <C-w>J
-    nnoremap sK <C-w>K
-    nnoremap sL <C-w>L
-    nnoremap sH <C-W>H
-    nnoremap s+ <C-w>+
-    nnoremap s- <C-w>-
-    nnoremap s< <C-w><
-    nnoremap s> <C-w>>
-    nnoremap sr <C-w>r
-    nnoremap s= <C-w>=
-    nnoremap sw <C-w>w
-    nnoremap so <C-w>_<C-w>|
-    nnoremap sO <C-w>=
-    nnoremap sp :<C-u>setl paste! paste?<CR>
-    nnoremap sn :<C-u>noh<CR>
-    nnoremap sN :<C-u>bn<CR>
-    nnoremap sP :<C-u>bp<CR>
-    nnoremap st :<C-u>tabnew<CR>
-    nnoremap sT :<C-u>Unite tab<CR>
-    nnoremap sf :<C-u>VimFiler<CR>
-    nnoremap ss :<C-u>sp<CR>
-    nnoremap sv :<C-u>vs<CR>
-    nnoremap sq :<C-u>q<CR>
-    nnoremap sQ :<C-u>bd<CR>
-    nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
-    nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
-    nnoremap su :<C-u>Unite file<CR>
+    "colorscheme molokai
+    colorscheme solarized
 
     "*******************************************************
     " NeoBundle
@@ -725,9 +556,7 @@ elseif has('win32') || has('win64')
     NeoBundle 'Shougo/vimproc.vim'
     NeoBundle 'Shougo/vimshell.vim'
     NeoBundle 'Shougo/vimfiler'
-    " NeoBundle 'scrooloose/nerdtree'
     NeoBundle 'scrooloose/syntastic'
-    " NeoBundle 'jistr/vim-nerdtree-tabs'
     NeoBundle 'itchyny/lightline.vim'
     NeoBundle 'nathanaelkane/vim-indent-guides'
     call neobundle#end()
