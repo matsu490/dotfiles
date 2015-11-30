@@ -1,8 +1,11 @@
-case ${OSTYPE} in
-#===========================================================
+#===============================================================================
 # For Mac OS X in laboratory
-#===========================================================
+#===============================================================================
+case ${OSTYPE} in
     darwin12.0)
+#*********************************************************************
+# Path and aliases
+#*********************************************************************
         export PATH="/usr/local/bin:$PATH"
         export PATH="/usr/local/Cellar:$PATH"
         export PYTHONPATH="/usr/local/lib/wxPython/lib/python2.7/site-packages/wx-3.0-osx_cocoa:/usr/local/lib/wxPython/lib/python2.7/site-packages:$PYTHONPATH"
@@ -13,6 +16,23 @@ case ${OSTYPE} in
         alias -s html='google-chrome'
         alias -s {gif,jpg,jpeg,png,bmp}='display'
 
+#*********************************************************************
+# VCS settings
+#*********************************************************************
+        # see http://tkengo.github.io/blog/2013/05/12/zsh-vcs-info/
+        autoload -Uz vcs_info
+        setopt prompt_subst
+        zstyle ':vcs_info:git:*' check-for-changes true
+        zstyle ':vcs_info:git:*' stagedstr "%F{yellow}!"
+        zstyle ':vcs_info:git:*' unstagedstr "%F{red}+"
+        zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
+        zstyle ':vcs_info:*' actionformats '[%b|%a]'
+        precmd () { vcs_info }
+        RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
+
+#*********************************************************************
+# TMUX functions
+#*********************************************************************
         function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
         function is_osx() { [[ $OSTYPE == darwin* ]]; }
         function is_screen_running() { [ ! -z "$STY" ]; }
@@ -75,12 +95,18 @@ case ${OSTYPE} in
         }
         tmux_automatically_attach_session
         ;;
-    linux-gnu)
-#===========================================================
+#===============================================================================
 # For Unix
-#===========================================================
+#===============================================================================
+    linux-gnu)
+#*********************************************************************
+# Path and aliases
+#*********************************************************************
         alias ls='ls -al'
 
+#*********************************************************************
+# TMUX functions
+#*********************************************************************
         function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
         function is_osx() { [[ $OSTYPE == darwin* ]]; }
         function is_screen_running() { [ ! -z "$STY" ]; }
