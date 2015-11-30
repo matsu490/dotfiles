@@ -8,7 +8,7 @@ case ${OSTYPE} in
         export PYTHONPATH="/usr/local/lib/wxPython/lib/python2.7/site-packages/wx-3.0-osx_cocoa:/usr/local/lib/wxPython/lib/python2.7/site-packages:$PYTHONPATH"
         export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.7.0"
         eval $(/usr/local/bin/gdircolors /Users/matsu/Downloads/dircolors-solarized-master/dircolors.ansi-universal)
-        alias ls='gls --color=auto'
+        alias ls='gls -al --color=auto'
         alias -s py='python'
         alias -s html='google-chrome'
         alias -s {gif,jpg,jpeg,png,bmp}='display'
