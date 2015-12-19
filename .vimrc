@@ -123,8 +123,6 @@ endfunction
 syntax enable
 syntax on
 
-set number
-
 " Colorscheme
 let s:is_windows = has('win16') || has('win32') || has('win64')
 let s:is_mac = has('mac')
@@ -573,9 +571,11 @@ NeoBundle 'Shougo/neocomplete'
 NeoBundle 'Shougo/vimproc.vim'
 NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'Shougo/vimfiler'
+NeoBundle 'thinca/vim-template'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'davidhalter/jedi-vim'
 call neobundle#end()
 filetype plugin on
 filetype indent on
@@ -691,5 +691,31 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd   ctermbg=black
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven  ctermbg=darkgray
 let g:indent_guides_enable_on_vim_startup=1
 let g:indent_guides_guide_size=1
+
+
+"*********************************************************************
+" vim-template
+"*********************************************************************
+"テンプレート中に含まれる特定文字列を置き換える
+autocmd User plugin-template-loaded call s:template_keywords()
+function! s:template_keywords()
+    silent! %s/<+DATE+>/\=strftime('%Y-%m-%d')/g
+"    silent! %s/<+FILENAME+>/\=expand('%:r')/g
+endfunction
+"テンプレート中に含まれる'<+CURSOR+>'にカーソルを移動
+autocmd User plugin-template-loaded
+    \   if search('<+CURSOR+>')
+    \ |     silent! execute 'normal! "_da>'
+    \ | endif
+
+"*********************************************************************
+" jedi-vim
+"*********************************************************************
+autocmd FileType python setlocal completeopt-=preview
+let g:jedi#completions_enabled = 1
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#popup_select_first = 0
+let g:jedi#documentation_command = '<leader>K'
+let g:jedi#rename_command = '<leader>R'
 
 endif
