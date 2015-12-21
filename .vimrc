@@ -229,7 +229,7 @@ filetype indent on
 " syntastic
 "*********************************************************************
 let g:syntastic_python_checkers = ['flake8']
-let g:syntastic_python_flake8_args = '--ignore="E501"'
+let g:syntastic_python_flake8_args = '--ignore="E501,F841,F403"'
 "let g:syntastic_python_flake8_args = '--ignore="E501,F403"'
 
 "*********************************************************************
