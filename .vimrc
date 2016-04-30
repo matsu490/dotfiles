@@ -84,6 +84,7 @@ nnoremap sP :<C-u>bp<CR>
 nnoremap st :<C-u>tabnew<CR>
 nnoremap sT :<C-u>Unite tab<CR>
 nnoremap sf :<C-u>VimFiler<CR>
+nnoremap sF :<C-u>VimFiler -split -simple -winwidth=35 -no-quit<CR>
 nnoremap ss :<C-u>sp<CR>
 nnoremap sv :<C-u>vs<CR>
 nnoremap sQ :<C-u>bd<CR>
