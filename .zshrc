@@ -6,6 +6,10 @@ case ${OSTYPE} in
 #*********************************************************************
 # Path and aliases
 #*********************************************************************
+        if [ -f /Applications/MacVim.app/Contents/MacOS/Vim ]; then
+          alias vi='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim "$@"'
+          alias vim='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim "$@"'
+        fi
         export PATH="/usr/local/bin:$PATH"
         export PATH="/usr/local/Cellar:$PATH"
         export PYTHONPATH="/usr/local/lib/wxPython/lib/python2.7/site-packages/wx-3.0-osx_cocoa:/usr/local/lib/wxPython/lib/python2.7/site-packages:$PYTHONPATH"

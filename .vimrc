@@ -222,9 +222,20 @@ NeoBundle 'scrooloose/syntastic'
 "NeoBundle 'jistr/vim-nerdtree-tabs'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'kakkyz81/evervim'
 call neobundle#end()
 filetype plugin on
 filetype indent on
+
+"*********************************************************************
+" syntastic
+"*********************************************************************
+set pythondll=/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/Python
+let g:evervim_devtoken='S=s129:U=d71068:E=15d461e2d76:C=155ee6d00e8:P=1cd:A=en-devtoken:V=2:H=bcc13d20377833b0b1413fcc213a3d57'
+nnoremap <Leader>l :EvervimNotebookList<CR>
+nnoremap <Leader>s :EvervimSearchByQuery<Space>
+nnoremap <Leader>c :EvervimCreateNote<CR>
+nnoremap <Leader>t :EvervimListTags<CR>
 
 "*********************************************************************
 " syntastic
@@ -284,8 +295,8 @@ if s:has_plugin('lightline.vim') "{{{2
                     \   'mode': 'MyMode',
                     \   'date': 'MyDate'
                     \ },
-                    \ 'separator': {'left': "\ue0b0", 'right': "\ue0b2 "},
-                    \ 'subseparator': {'left': "\ue0b1", 'right': "\ue0b3 "}
+                    \ 'separator': {'left': "\ue0b0", 'right': "\ue0b2"},
+                    \ 'subseparator': {'left': "\ue0b1", 'right': "\ue0b3"}
                     \ }
     endif
 
