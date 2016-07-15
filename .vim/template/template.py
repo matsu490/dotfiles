@@ -5,6 +5,6 @@
 # Author:    Taishi Matsumura
 # Created:   <+DATE+>
 #
-# Copyright (C) 2015 Taishi Matsumura
+# Copyright (C) 2016 Taishi Matsumura
 #
 <+CURSOR+>
