@@ -50,9 +50,9 @@ noremap L 10l
 noremap gr gT
 noremap n nzz
 noremap N Nzz
-inoremap ( ()<Left>
-inoremap { {}<Left>
-inoremap [ []<Left>
+inoremap ( ()<Esc>i
+inoremap { {}<Esc>i
+inoremap [ []<Esc>i
 nnoremap <Space> i<Space><Esc>
 nnoremap <Tab> I<Tab><Esc>
 nnoremap <Return> o<Esc>
@@ -189,43 +189,62 @@ endif
 " For Mac OS X
 "===============================================================================
 if has('mac')
-"*********************************************************************
-" NeoBundle
-"*********************************************************************
-set nocompatible
-filetype off
-if has('vim_starting')
-    set runtimepath+=~/.vim/bundle/neobundle.vim
-endif
-call neobundle#begin(expand('~/.vim/bundle'))
-" Colorscheme plugins
-" NeoBundle 'b4b4r07/solarized.vim', { "base" : $HOME."/.vim/colors" }
-" NeoBundle 'nanotech/jellybeans.vim', { "base" : $HOME."/.vim/colors" }
-" NeoBundle 'tomasr/molokai', { "base" : $HOME."/.vim/colors" }
-" NeoBundle 'w0ng/vim-hybrid', { "base" : $HOME."/.vim/colors" }
+""*********************************************************************
+"" NeoBundle
+""*********************************************************************
+"set nocompatible
+"filetype off
+"if has('vim_starting')
+"    set runtimepath+=~/.vim/bundle/neobundle.vim
+"endif
+"call neobundle#begin(expand('~/.vim/bundle'))
+"" Colorscheme plugins
+"" NeoBundle 'b4b4r07/solarized.vim', { "base" : $HOME."/.vim/colors" }
+"" NeoBundle 'nanotech/jellybeans.vim', { "base" : $HOME."/.vim/colors" }
+"" NeoBundle 'tomasr/molokai', { "base" : $HOME."/.vim/colors" }
+"" NeoBundle 'w0ng/vim-hybrid', { "base" : $HOME."/.vim/colors" }
+"
+"NeoBundleFetch 'Shougo/neobundle.vim'
+"NeoBundle 'thinca/vim-template'
+"NeoBundle 'thinca/vim-quickrun'
+"NeoBundle 'Shougo/neobundle.vim'
+"NeoBundle 'Shougo/neocomplete'
+"NeoBundle 'Shougo/unite.vim'
+"NeoBundle 'Shougo/vimproc'
+"NeoBundle 'Shougo/vimfiler'
+"NeoBundle 'ujihisa/unite-colorscheme'
+""NeoBundle 'osyo-manga/shabadou.vim'
+""NeoBundle 'osyo-manga/vim-watchdogs'
+""NeoBundle 'davidhalter/jedi-vim'
+"NeoBundle 'jceb/vim-hier'
+"NeoBundle 'scrooloose/syntastic'
+""NeoBundle 'scrooloose/nerdtree'
+""NeoBundle 'jistr/vim-nerdtree-tabs'
+"NeoBundle 'itchyny/lightline.vim'
+"NeoBundle 'nathanaelkane/vim-indent-guides'
+"" NeoBundle 'kakkyz81/evervim'
+"call neobundle#end()
+"filetype plugin on
+"filetype indent on
 
-NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle 'thinca/vim-template'
-NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'Shougo/neobundle.vim'
-NeoBundle 'Shougo/neocomplete'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/vimproc'
-NeoBundle 'Shougo/vimfiler'
-NeoBundle 'ujihisa/unite-colorscheme'
-"NeoBundle 'osyo-manga/shabadou.vim'
-"NeoBundle 'osyo-manga/vim-watchdogs'
-"NeoBundle 'davidhalter/jedi-vim'
-NeoBundle 'jceb/vim-hier'
-NeoBundle 'scrooloose/syntastic'
-"NeoBundle 'scrooloose/nerdtree'
-"NeoBundle 'jistr/vim-nerdtree-tabs'
-NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'nathanaelkane/vim-indent-guides'
-NeoBundle 'kakkyz81/evervim'
-call neobundle#end()
-filetype plugin on
-filetype indent on
+"*********************************************************************
+" dein
+"*********************************************************************
+if &compatible
+    set nocompatible
+endif
+set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
+call dein#begin(expand('~/.vim/dein'))
+call dein#add('Shougo/dein.vim')
+call dein#add('Shougo/vimproc.vim', {'build': 'make -f make_mac.mak'})
+call dein#add('Shougo/neocomplete')
+call dein#add('Shougo/vimfiler')
+call dein#add('Shougo/unite.vim')
+call dein#add('scrooloose/syntastic')
+call dein#add('nathanaelkane/vim-indent-guides')
+call dein#add('itchyny/lightline.vim')
+call dein#add('davidhalter/jedi-vim')
+call dein#end()
 
 "*********************************************************************
 " syntastic
