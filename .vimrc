@@ -245,6 +245,8 @@ call dein#add('nathanaelkane/vim-indent-guides')
 call dein#add('itchyny/lightline.vim')
 call dein#add('davidhalter/jedi-vim')
 call dein#end()
+filetype plugin on
+filetype indent on
 
 "*********************************************************************
 " syntastic
@@ -590,24 +592,46 @@ colorscheme solarized
 "*********************************************************************
 " NeoBundle
 "*********************************************************************
-set nocompatible
-filetype off
-if has('vim_starting')
-    set runtimepath+=~/.vim/bundle/neobundle.vim
+" set nocompatible
+" filetype off
+" if has('vim_starting')
+    " set runtimepath+=~/.vim/bundle/neobundle.vim
+" endif
+" call neobundle#begin(expand('~/.vim/bundle'))
+" NeoBundleFetch 'Shougo/neobundle.vim'
+" NeoBundle 'Shougo/unite.vim'
+" NeoBundle 'Shougo/neocomplete'
+" NeoBundle 'Shougo/vimproc.vim'
+" NeoBundle 'Shougo/vimshell.vim'
+" NeoBundle 'Shougo/vimfiler'
+" NeoBundle 'thinca/vim-template'
+" NeoBundle 'scrooloose/syntastic'
+" NeoBundle 'itchyny/lightline.vim'
+" NeoBundle 'nathanaelkane/vim-indent-guides'
+" NeoBundle 'davidhalter/jedi-vim'
+" call neobundle#end()
+" filetype plugin on
+" filetype indent on
+
+"*********************************************************************
+" dein
+"*********************************************************************
+if &compatible
+    set nocompatible
 endif
-call neobundle#begin(expand('~/.vim/bundle'))
-NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/neocomplete'
-NeoBundle 'Shougo/vimproc.vim'
-NeoBundle 'Shougo/vimshell.vim'
-NeoBundle 'Shougo/vimfiler'
-NeoBundle 'thinca/vim-template'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'nathanaelkane/vim-indent-guides'
-NeoBundle 'davidhalter/jedi-vim'
-call neobundle#end()
+set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
+call dein#begin(expand('~/.vim/dein'))
+call dein#add('Shougo/dein.vim')
+call dein#add('Shougo/unite.vim')
+call dein#add('Shougo/neocomplete')
+call dein#add('Shougo/vimproc.vim')
+call dein#add('Shougo/vimfiler')
+call dein#add('thinca/vim-template')
+call dein#add('scrooloose/syntastic')
+call dein#add('itchyny/lightline.vim')
+call dein#add('nathanaelkane/vim-indent-guides')
+call dein#add('davidhalter/jedi-vim')
+call dein#end()
 filetype plugin on
 filetype indent on
 
