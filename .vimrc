@@ -57,7 +57,9 @@ inoremap [ []<Esc>i
 nnoremap <Space> i<Space><Esc>
 nnoremap <Tab> I<Tab><Esc>
 nnoremap <Return> o<Esc>
+nnoremap <S-Return> O<Esc>
 nnoremap <F5> :<C-u>source ~/.vimrc<CR>
+nnoremap <F6> :<C-u>e ~/.vimrc<CR>
 
 nnoremap s <Nop>
 nnoremap sj <C-w>j
@@ -128,10 +130,11 @@ syntax on
 let s:is_windows = has('win16') || has('win32') || has('win64')
 let s:is_mac = has('mac')
 let s:is_unix = has('unix')
-set background=dark
+
 if !has('gui_running')
     set background=dark
 endif
+
 set t_Co=256
 if &t_Co < 256
     colorscheme desert
@@ -585,10 +588,8 @@ elseif has('win32') || has('win64')
 "*********************************************************************
 " Standard settings
 "*********************************************************************
-set columns=100        " Window width
-set lines=52           " Window height
-"colorscheme molokai
 colorscheme solarized
+set background=dark
 
 "*********************************************************************
 " NeoBundle
