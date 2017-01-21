@@ -7,6 +7,7 @@
 set number              " represent row number
 set laststatus=2        " status line
 set showtabline=2
+set scrolloff=3
 set noshowmode
 set backspace=start,eol,indent  "バックスペースの設定
 set clipboard=unnamed,autoselect    "ヤンクとクリップボードの共有
@@ -56,7 +57,6 @@ inoremap [ []<Esc>i
 nnoremap <Space> i<Space><Esc>
 nnoremap <Tab> I<Tab><Esc>
 nnoremap <Return> o<Esc>
-"nnoremap <C-e> :NERDTreeTabsToggle<CR>
 nnoremap <F5> :<C-u>source ~/.vimrc<CR>
 
 nnoremap s <Nop>
