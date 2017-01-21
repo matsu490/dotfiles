@@ -22,7 +22,7 @@ elseif has('unix')
 "===========================================================
 elseif has('win32') || has('win64')
     set guifont=MyricaM\ M:h13
-    set columns=140			"ウィンドウの幅
+    set columns=80			"ウィンドウの幅
     set lines=52			"ウィンドウの高さ
     set background=dark
     colorscheme solarized	"カラースキーマ設定
