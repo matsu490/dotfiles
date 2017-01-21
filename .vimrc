@@ -149,40 +149,6 @@ else
         colorscheme default
     endif
 endif
-"if &t_Co < 256
-"    colorscheme default
-"else
-"    if has('gui_running') && !s:is_windows
-"        " For MacVim, only
-"        if s:has_plugin('solarized.vim')
-"            try
-"                colorscheme solarized-cui
-"            catch
-"                colorscheme solarized
-"            endtry
-"        endif
-"    else
-"        " Vim for CUI
-"        " let g:solarized_termcolors=256
-"        if s:has_plugin('solarized.vim')
-"            try
-"                colorscheme solarized-cui
-"            catch
-"                colorscheme solarized
-"            endtry
-"        elseif s:has_plugin('jellybeans.vim')
-"            colorscheme jellybeans
-"        elseif s:has_plugin('vim-hybrid')
-"            colorscheme hybrid
-"        else
-"            if s:is_windows
-"                colorscheme default
-"            else
-"                colorscheme desert
-"            endif
-"        endif
-"    endif
-"endif
 
 " Plugins: {{{1
 " If you have below plugins, set it.
@@ -192,44 +158,6 @@ endif
 " For Mac OS X
 "===============================================================================
 if has('mac')
-""*********************************************************************
-"" NeoBundle
-""*********************************************************************
-"set nocompatible
-"filetype off
-"if has('vim_starting')
-"    set runtimepath+=~/.vim/bundle/neobundle.vim
-"endif
-"call neobundle#begin(expand('~/.vim/bundle'))
-"" Colorscheme plugins
-"" NeoBundle 'b4b4r07/solarized.vim', { "base" : $HOME."/.vim/colors" }
-"" NeoBundle 'nanotech/jellybeans.vim', { "base" : $HOME."/.vim/colors" }
-"" NeoBundle 'tomasr/molokai', { "base" : $HOME."/.vim/colors" }
-"" NeoBundle 'w0ng/vim-hybrid', { "base" : $HOME."/.vim/colors" }
-"
-"NeoBundleFetch 'Shougo/neobundle.vim'
-"NeoBundle 'thinca/vim-template'
-"NeoBundle 'thinca/vim-quickrun'
-"NeoBundle 'Shougo/neobundle.vim'
-"NeoBundle 'Shougo/neocomplete'
-"NeoBundle 'Shougo/unite.vim'
-"NeoBundle 'Shougo/vimproc'
-"NeoBundle 'Shougo/vimfiler'
-"NeoBundle 'ujihisa/unite-colorscheme'
-""NeoBundle 'osyo-manga/shabadou.vim'
-""NeoBundle 'osyo-manga/vim-watchdogs'
-""NeoBundle 'davidhalter/jedi-vim'
-"NeoBundle 'jceb/vim-hier'
-"NeoBundle 'scrooloose/syntastic'
-""NeoBundle 'scrooloose/nerdtree'
-""NeoBundle 'jistr/vim-nerdtree-tabs'
-"NeoBundle 'itchyny/lightline.vim'
-"NeoBundle 'nathanaelkane/vim-indent-guides'
-"" NeoBundle 'kakkyz81/evervim'
-"call neobundle#end()
-"filetype plugin on
-"filetype indent on
-
 "*********************************************************************
 " dein
 "*********************************************************************
@@ -385,18 +313,6 @@ let g:neocomplete#enable_at_startup = 1
 " vimfiler
 "*********************************************************************
 let g:vimfiler_enable_auto_cd = 1
-
-"*********************************************************************
-" watchdogs
-"*********************************************************************
-"let g:quickrun_config = {
-"\   'watchdogs_checker/_':{
-"\       'hook/close_quickfix/enable_exit':1,
-"\   },
-"\}
-"call watchdogs#setup(g:quickrun_config)
-"let g:watchdogs_check_BufWritePost_enable = 1
-"let g:watchdogs_check_CursorHold_enable = 1
 
 "*********************************************************************
 " vim-template
@@ -590,30 +506,6 @@ elseif has('win32') || has('win64')
 "*********************************************************************
 colorscheme solarized
 set background=dark
-
-"*********************************************************************
-" NeoBundle
-"*********************************************************************
-" set nocompatible
-" filetype off
-" if has('vim_starting')
-    " set runtimepath+=~/.vim/bundle/neobundle.vim
-" endif
-" call neobundle#begin(expand('~/.vim/bundle'))
-" NeoBundleFetch 'Shougo/neobundle.vim'
-" NeoBundle 'Shougo/unite.vim'
-" NeoBundle 'Shougo/neocomplete'
-" NeoBundle 'Shougo/vimproc.vim'
-" NeoBundle 'Shougo/vimshell.vim'
-" NeoBundle 'Shougo/vimfiler'
-" NeoBundle 'thinca/vim-template'
-" NeoBundle 'scrooloose/syntastic'
-" NeoBundle 'itchyny/lightline.vim'
-" NeoBundle 'nathanaelkane/vim-indent-guides'
-" NeoBundle 'davidhalter/jedi-vim'
-" call neobundle#end()
-" filetype plugin on
-" filetype indent on
 
 "*********************************************************************
 " dein
