@@ -6,6 +6,8 @@
 "*********************************************************************
 set number              " represent row number
 set laststatus=2        " status line
+set iminsert=0
+set imsearch=0
 set showtabline=2
 set scrolloff=3
 set noshowmode
