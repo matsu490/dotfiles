@@ -6,7 +6,10 @@
 "*********************************************************************
 set number              " represent row number
 set laststatus=2        " status line
+set iminsert=0
+set imsearch=0
 set showtabline=2
+set scrolloff=3
 set noshowmode
 set backspace=start,eol,indent  "バックスペースの設定
 set clipboard=unnamed,autoselect    "ヤンクとクリップボードの共有
@@ -56,8 +59,9 @@ inoremap [ []<Esc>i
 nnoremap <Space> i<Space><Esc>
 nnoremap <Tab> I<Tab><Esc>
 nnoremap <Return> o<Esc>
-"nnoremap <C-e> :NERDTreeTabsToggle<CR>
+nnoremap <S-Return> O<Esc>
 nnoremap <F5> :<C-u>source ~/.vimrc<CR>
+nnoremap <F6> :<C-u>e ~/.vimrc<CR>
 
 nnoremap s <Nop>
 nnoremap sj <C-w>j
@@ -128,10 +132,11 @@ syntax on
 let s:is_windows = has('win16') || has('win32') || has('win64')
 let s:is_mac = has('mac')
 let s:is_unix = has('unix')
-set background=dark
+
 if !has('gui_running')
     set background=dark
 endif
+
 set t_Co=256
 if &t_Co < 256
     colorscheme desert
@@ -146,40 +151,6 @@ else
         colorscheme default
     endif
 endif
-"if &t_Co < 256
-"    colorscheme default
-"else
-"    if has('gui_running') && !s:is_windows
-"        " For MacVim, only
-"        if s:has_plugin('solarized.vim')
-"            try
-"                colorscheme solarized-cui
-"            catch
-"                colorscheme solarized
-"            endtry
-"        endif
-"    else
-"        " Vim for CUI
-"        " let g:solarized_termcolors=256
-"        if s:has_plugin('solarized.vim')
-"            try
-"                colorscheme solarized-cui
-"            catch
-"                colorscheme solarized
-"            endtry
-"        elseif s:has_plugin('jellybeans.vim')
-"            colorscheme jellybeans
-"        elseif s:has_plugin('vim-hybrid')
-"            colorscheme hybrid
-"        else
-"            if s:is_windows
-"                colorscheme default
-"            else
-"                colorscheme desert
-"            endif
-"        endif
-"    endif
-"endif
 
 " Plugins: {{{1
 " If you have below plugins, set it.
@@ -189,44 +160,6 @@ endif
 " For Mac OS X
 "===============================================================================
 if has('mac')
-""*********************************************************************
-"" NeoBundle
-""*********************************************************************
-"set nocompatible
-"filetype off
-"if has('vim_starting')
-"    set runtimepath+=~/.vim/bundle/neobundle.vim
-"endif
-"call neobundle#begin(expand('~/.vim/bundle'))
-"" Colorscheme plugins
-"" NeoBundle 'b4b4r07/solarized.vim', { "base" : $HOME."/.vim/colors" }
-"" NeoBundle 'nanotech/jellybeans.vim', { "base" : $HOME."/.vim/colors" }
-"" NeoBundle 'tomasr/molokai', { "base" : $HOME."/.vim/colors" }
-"" NeoBundle 'w0ng/vim-hybrid', { "base" : $HOME."/.vim/colors" }
-"
-"NeoBundleFetch 'Shougo/neobundle.vim'
-"NeoBundle 'thinca/vim-template'
-"NeoBundle 'thinca/vim-quickrun'
-"NeoBundle 'Shougo/neobundle.vim'
-"NeoBundle 'Shougo/neocomplete'
-"NeoBundle 'Shougo/unite.vim'
-"NeoBundle 'Shougo/vimproc'
-"NeoBundle 'Shougo/vimfiler'
-"NeoBundle 'ujihisa/unite-colorscheme'
-""NeoBundle 'osyo-manga/shabadou.vim'
-""NeoBundle 'osyo-manga/vim-watchdogs'
-""NeoBundle 'davidhalter/jedi-vim'
-"NeoBundle 'jceb/vim-hier'
-"NeoBundle 'scrooloose/syntastic'
-""NeoBundle 'scrooloose/nerdtree'
-""NeoBundle 'jistr/vim-nerdtree-tabs'
-"NeoBundle 'itchyny/lightline.vim'
-"NeoBundle 'nathanaelkane/vim-indent-guides'
-"" NeoBundle 'kakkyz81/evervim'
-"call neobundle#end()
-"filetype plugin on
-"filetype indent on
-
 "*********************************************************************
 " dein
 "*********************************************************************
@@ -382,18 +315,6 @@ let g:neocomplete#enable_at_startup = 1
 " vimfiler
 "*********************************************************************
 let g:vimfiler_enable_auto_cd = 1
-
-"*********************************************************************
-" watchdogs
-"*********************************************************************
-"let g:quickrun_config = {
-"\   'watchdogs_checker/_':{
-"\       'hook/close_quickfix/enable_exit':1,
-"\   },
-"\}
-"call watchdogs#setup(g:quickrun_config)
-"let g:watchdogs_check_BufWritePost_enable = 1
-"let g:watchdogs_check_CursorHold_enable = 1
 
 "*********************************************************************
 " vim-template
@@ -585,34 +506,8 @@ elseif has('win32') || has('win64')
 "*********************************************************************
 " Standard settings
 "*********************************************************************
-set columns=100        " Window width
-set lines=52           " Window height
-"colorscheme molokai
 colorscheme solarized
-
-"*********************************************************************
-" NeoBundle
-"*********************************************************************
-" set nocompatible
-" filetype off
-" if has('vim_starting')
-    " set runtimepath+=~/.vim/bundle/neobundle.vim
-" endif
-" call neobundle#begin(expand('~/.vim/bundle'))
-" NeoBundleFetch 'Shougo/neobundle.vim'
-" NeoBundle 'Shougo/unite.vim'
-" NeoBundle 'Shougo/neocomplete'
-" NeoBundle 'Shougo/vimproc.vim'
-" NeoBundle 'Shougo/vimshell.vim'
-" NeoBundle 'Shougo/vimfiler'
-" NeoBundle 'thinca/vim-template'
-" NeoBundle 'scrooloose/syntastic'
-" NeoBundle 'itchyny/lightline.vim'
-" NeoBundle 'nathanaelkane/vim-indent-guides'
-" NeoBundle 'davidhalter/jedi-vim'
-" call neobundle#end()
-" filetype plugin on
-" filetype indent on
+set background=dark
 
 "*********************************************************************
 " dein
