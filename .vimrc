@@ -53,6 +53,10 @@ noremap L 10l
 noremap gr gT
 noremap n nzz
 noremap N Nzz
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-h> <Left>
+inoremap <C-l> <Right>
 inoremap ( ()<Esc>i
 inoremap { {}<Esc>i
 inoremap [ []<Esc>i
